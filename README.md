@@ -1,5 +1,47 @@
 # ESP-Roomlight
+
+<h2>Verkabelung</h2>
+
+<table>
+    <tr>
+        <td>rot</td>
+        <td>5V Spannung</td>
+    </tr>
+    
+    <tr>
+        <td>gelb</td>
+        <td>Erde</td>
+    </tr>
+    
+    <tr>
+        <td>weiß</td>
+        <td>
+            
+            <table>
+                <tr>
+                    <td>Data - Wandseite vorne</td>
+                    <td>60x LEDs</td>
+                    <td>2 Knoten im Kabel</td>
+                </tr>
+                
+                <tr>
+                    <td>Data - Wandseite hinten</td>
+                    <td>60x LEDs</td>
+                    <td>1 Knoten im Kabel</td>
+                </tr>
+                
+                <tr>
+                    <td>Data - Seite</td>
+                    <td>50x LEDs</td>
+                    <td>-</td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</ul>
+
 <h2>benötigte Bibliotheken</h2>
+
 <table>
   <tr>
     <td>
@@ -9,6 +51,7 @@
       <b>Quelle</b>
     </td>
   </tr>
+  
   <tr>
     <td>
       Arduino-LED Strip
@@ -17,14 +60,7 @@
       https://github.com/MadMax2506/Arduino-LED_Strip
     </td>
   </tr>
-  <tr>
-    <td>
-      Arduino-Virtual LED Strip
-    </td>
-    <td>
-      https://github.com/MadMax2506/Arduino-Virtual_LED_Strip
-    </td>
-  </tr>
+ 
   <tr>
     <td>
       Arduino-Colors
@@ -33,6 +69,7 @@
       https://github.com/MadMax2506/Arduino-Colors
     </td>
   </tr>
+  
   <tr>
     <td>
       Arduino-Storage
@@ -41,6 +78,7 @@
       https://github.com/MadMax2506/Arduino-Storage
     </td>
   </tr>
+  
   <tr>
     <td>
       ESP-WLAN
@@ -49,6 +87,7 @@
       https://github.com/MadMax2506/ESP-Wlan
     </td>
   </tr>
+  
   <tr>
     <td>
       ESP-Refresh over the air
@@ -57,6 +96,7 @@
       https://github.com/MadMax2506/ESP-Refresh_over_the_air
     </td>
   </tr>
+  
   <tr>
     <td>
       ESP-MQTT
@@ -68,6 +108,7 @@
 </table>
 
 <h2>MQTT</h2>
+
 <table>
   <tr>
     <td>
@@ -76,9 +117,8 @@
     <td>
       <b>Beschreibung</b>
     </td>
-  <tr>
-   
-  <!-- Smart-Home Geräte -->
+  </tr>
+  
   <tr>
     <td>
       <code>devices</code>
@@ -87,9 +127,7 @@
       Smart-Home Geräte
       <table>
         <tr>
-          <td>
-            <code>list-devices</code>
-          </td>
+          <td><code>list-devices</code></td>
           <td>            
             Listet alle Geräte mit folgenden Informationen auf (JSON-Format)
             <ul>
@@ -104,11 +142,8 @@
     </td>
   </tr>
   
-  <!-- globaler Status -->
   <tr>
-    <td>
-      <code>status/<i>*mac*</i></code>
-    </td>
+    <td><code>status/<i>*mac*</i></code></td>
     <td>
       Anzeige der aktuellen Einrichtung des Roomlights für jede Unterteilung (JSON-Format)
       <ul>
@@ -121,11 +156,13 @@
     </td>
   </tr>
   
-  <!-- spezifizierter Status -->
   <tr>
     <td>
-      <code>status/<i>*mac*</i>/keyboard</code></br>
-      <code>status/<i>*mac*</i>/bed</code>
+        <ul>
+            <li><code>status/<i>*mac*</i>/keyboard</code></li>
+            <li><code>status/<i>*mac*</i>/bed/wall</code></li>
+            <li><code>status/<i>*mac*</i>/bed/side</code></li>
+        </ul>
     </td>
     <td>
       spezifizierter Status für jede Unterteilungen des Roomlights
@@ -137,11 +174,8 @@
     </td>
   </tr>
   
-  <!-- globale Konfiguration -->
   <tr>
-    <td>
-      <code>conf/<i>*mac*</i></code>
-    </td>
+    <td><code>conf/<i>*mac*</i></code></td>
     <td>
       globale Konfiguration für alle Unterteilungen des Roomlights
       <table>
@@ -155,25 +189,24 @@
     </td>
   </tr>
   
-  <!-- spezifizierte Konfiguration -->
   <tr>
     <td>
-      <code>conf/<i>*mac*</i>/keyboard</code></br>
-      <code>conf/<i>*mac*</i>/bed</code>
+         <ul>
+            <li><code>conf/<i>*mac*</i>/keyboard</code></li>
+            <li><code>conf/<i>*mac*</i>/bed/wall</code></li>
+            <li><code>conf/<i>*mac*</i>/bed/side</code></li>
+        </ul>
     </td>
     <td>
       spezifizierte Konfiguration für jede Unterteilungen des Roomlights
       <table>
         <tr>
           <td><code>color: r;g;b;w</code></td>
-          <td>
-            Animationsfarbe <i>(abgesehen von der Rainbow-Animation)</i>
-          </td>
+          <td>Animationsfarbe <i>(abgesehen von der Rainbow-Animation)</i></td>
         </tr>
+        
         <tr>
-          <td>
-            <code>orientation: c</code>
-          </td>
+          <td><code>orientation: c</code></td>
           <td>
             Animationsrichtung
             <ul>
@@ -183,6 +216,7 @@
             </ul>
           </td>
         </tr>
+        
         <tr>
           <td>
             <code>animation-typ: str</code>
@@ -196,6 +230,7 @@
             </ul>
           </td>
         </tr>
+        
         <tr>
           <td>
             <code>animation-time: t</code>
@@ -204,6 +239,7 @@
             Zeit für die Animation pro LED
           </td>
         </tr>
+        
         <tr>
           <td>
             <code>restart-animation</code>
@@ -211,7 +247,8 @@
           <td>
             Neustart der Animation
           </td>
-        </tr>
+         </tr>
+        
          <tr>
           <td>
             <code>active</code>
@@ -220,6 +257,7 @@
             Streifen in den Zustand aktiv setzen
            </td>
         </tr>
+        
          <tr>
           <td>
             <code>idle</code>
@@ -228,6 +266,7 @@
             Streifen in den Zustand Leerlauf setzen
            </td>
         </tr>
+        
         <tr>
           <td>
             <code>reload-conf</code>
@@ -236,6 +275,7 @@
             Wiederherstellung der Standardkonfiguration
           </td>
         </tr>
+        
         <tr>
           <td>
             <code>save-conf</code>
@@ -250,4 +290,4 @@
 </table>
 
 <h2>App fürs Smart-Home</h2>
-https://github.com/MadMax2506/ReactNative-Smart_Home
+http://localhost:8888/MadMax/ReactNative-SmartHome
