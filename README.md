@@ -38,7 +38,7 @@
             </table>
         </td>
     </tr>
-</ul>
+</table>
 
 <h2>benötigte Bibliotheken</h2>
 
