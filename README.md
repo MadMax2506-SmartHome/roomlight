@@ -7,12 +7,10 @@
         <td>rot</td>
         <td>5V Spannung</td>
     </tr>
-    
     <tr>
         <td>gelb</td>
         <td>Erde</td>
     </tr>
-    
     <tr>
         <td>weiß</td>
         <td>
