@@ -14,20 +14,17 @@
     <tr>
         <td>weiß</td>
         <td>
-            
             <table>
                 <tr>
                     <td>Data - Wandseite vorne</td>
                     <td>60x LEDs</td>
                     <td>2 Knoten im Kabel</td>
                 </tr>
-                
                 <tr>
                     <td>Data - Wandseite hinten</td>
                     <td>60x LEDs</td>
                     <td>1 Knoten im Kabel</td>
                 </tr>
-                
                 <tr>
                     <td>Data - Seite</td>
                     <td>50x LEDs</td>
