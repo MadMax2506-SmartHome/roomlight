@@ -199,7 +199,6 @@
           <td><code>color: r;g;b;w</code></td>
           <td>Animationsfarbe <i>(abgesehen von der Rainbow-Animation)</i></td>
         </tr>
-        
         <tr>
           <td><code>orientation: c</code></td>
           <td>
@@ -211,7 +210,6 @@
             </ul>
           </td>
         </tr>
-        
         <tr>
           <td>
             <code>animation-typ: str</code>
@@ -225,7 +223,6 @@
             </ul>
           </td>
         </tr>
-        
         <tr>
           <td>
             <code>animation-time: t</code>
@@ -234,7 +231,6 @@
             Zeit für die Animation pro LED
           </td>
         </tr>
-        
         <tr>
           <td>
             <code>restart-animation</code>
@@ -243,7 +239,6 @@
             Neustart der Animation
           </td>
          </tr>
-        
          <tr>
           <td>
             <code>active</code>
@@ -252,7 +247,6 @@
             Streifen in den Zustand aktiv setzen
            </td>
         </tr>
-        
          <tr>
           <td>
             <code>idle</code>
@@ -261,7 +255,6 @@
             Streifen in den Zustand Leerlauf setzen
            </td>
         </tr>
-        
         <tr>
           <td>
             <code>reload-conf</code>
@@ -270,7 +263,6 @@
             Wiederherstellung der Standardkonfiguration
           </td>
         </tr>
-        
         <tr>
           <td>
             <code>save-conf</code>
