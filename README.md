@@ -275,6 +275,3 @@
     </td>
   </tr>
 </table>
-
-<h2>App fürs Smart-Home</h2>
-http://localhost:8888/MadMax/ReactNative-SmartHome
