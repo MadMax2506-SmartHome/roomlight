@@ -16,7 +16,7 @@
 
 //netwok
 struct wlan {
-  int i_maxConnectionTrys             = 10;
+  int i_maxConnectionTrys = 10;
   
   boolean b_isConnected = false;
 
@@ -43,7 +43,7 @@ struct mqtt {
   boolean b_retained       = false;
   boolean b_isConnected    = false;
 
-  char* devicename  = "Roomlight Max";
+  char* devicename  = "roomlight";
   
   char** ppc_topicsToSuscribe;
   char** ppc_topicsToPublish;
@@ -329,7 +329,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
   char c_delimiterCommandContent[] = "; ";
 
   char* pc_command = strtok(pc_msg, c_delimiterCommand);
-
+  
   if(strcmp(topic, mqtt.ppc_topicsToSuscribe[0]) == 0) {
     if(strcmp(pc_command, "list-devices") == 0) {
       //device info
