@@ -244,7 +244,8 @@
 	        <li>ArduinoOTA (by Arduino, Juraj Andrassy) -> <b>zu suchen: "ota"</b></li>
 	        <li>Adafruit NeoPixel (by Adafruit ) -> <b>zu suchen: "neo pixel"</b></li>
 	        <li>PubSublient (by Nick O'Leary) -> <b>zu suchen: "pubsub client"</b></li>
-		</ul>
+        </ul>
+		</li>
 </ol>
 
 <h3>Refresh over the air</h3>
