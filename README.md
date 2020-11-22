@@ -1,5 +1,10 @@
 # ESP-Roomlight
 
+## Allgemein
+<ul>
+  <li>Gerätename: <code>roomlight</code></li>
+</ul>
+
 <h2>Verkabelung</h2>
 
 <table>
@@ -46,7 +51,7 @@
       <b>Quelle</b>
     </td>
   </tr>
-  
+
   <tr>
     <td>
       Arduino-LED Strip
@@ -55,7 +60,7 @@
       https://github.com/MadMax2506/Arduino-LED_Strip
     </td>
   </tr>
- 
+
   <tr>
     <td>
       Arduino-Colors
@@ -64,7 +69,7 @@
       https://github.com/MadMax2506/Arduino-Colors
     </td>
   </tr>
-  
+
   <tr>
     <td>
       Arduino-Storage
@@ -73,7 +78,7 @@
       https://github.com/MadMax2506/Arduino-Storage
     </td>
   </tr>
-  
+
   <tr>
     <td>
       ESP-WLAN
@@ -82,7 +87,7 @@
       https://github.com/MadMax2506/ESP-Wlan
     </td>
   </tr>
-  
+
   <tr>
     <td>
       ESP-Refresh over the air
@@ -91,7 +96,7 @@
       https://github.com/MadMax2506/ESP-Refresh_over_the_air
     </td>
   </tr>
-  
+
   <tr>
     <td>
       ESP-MQTT
@@ -113,7 +118,7 @@
       <b>Beschreibung</b>
     </td>
   </tr>
-  
+
   <tr>
     <td>
       <code>devices</code>
@@ -136,7 +141,7 @@
       </table>
     </td>
   </tr>
-  
+
   <tr>
     <td><code>status/<i>*mac*</i></code></td>
     <td>
@@ -150,7 +155,7 @@
       </ul>
     </td>
   </tr>
-  
+
   <tr>
     <td>
         <ul>
@@ -168,7 +173,7 @@
       </ul>
     </td>
   </tr>
-  
+
   <tr>
     <td><code>conf/<i>*mac*</i></code></td>
     <td>
@@ -183,7 +188,7 @@
       </table>
     </td>
   </tr>
-  
+
   <tr>
     <td>
          <ul>

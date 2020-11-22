@@ -17,7 +17,7 @@
 //netwok
 struct wlan {
   int i_maxConnectionTrys = 10;
-  
+
   boolean b_isConnected = false;
 
   char* pc_ssid     = "Max";
@@ -39,12 +39,12 @@ struct mqtt {
   int i_maxConnectionTrys             = 2;
   int i_countTopicsToSubscribe;
   int i_countTopicsToPublish;
-  
+
   boolean b_retained       = false;
   boolean b_isConnected    = false;
 
-  char* devicename  = "roomlight";
-  
+  char* devicename  = "roomlight"; // wichtig für von außen darauf zugreifende Anwendungen
+
   char** ppc_topicsToSuscribe;
   char** ppc_topicsToPublish;
 
@@ -85,7 +85,7 @@ void loop() {
 void setupData() {
 //Serial
   Serial.begin(9600);
-  
+
   //wlan
   wlan.p_connection = new WlanESP(wlan.pc_ssid, wlan.pc_password, wlan.i_maxConnectionTrys);
 
@@ -94,7 +94,7 @@ void setupData() {
 
   //mqtt
   mqtt.p_connection = new MQTT_ESP(mqtt.pbyte_ip, mqtt.i_port, wlan.p_espClient, mqtt.i_maxConnectionTrys, mqtt.b_retained);
-  
+
   //color erstellen
   p_color = new Colors(stripKeyboard.i_colormodus);
 
@@ -115,7 +115,7 @@ void setupData() {
     stripBedWall.i_pin       = PIN_D3;
     stripBedWall.i_countLeds = 60;
     stripBedWall.p_physical  = new Ledstrip(stripBedWall.i_pin, stripBedWall.i_countLeds, stripBedWall.i_brightness, stripBedWall.i_colormodus);
-  
+
     //animation
     bedWall.i_crcStorageIndex      = 8;
     bedWall.i_startStorageIndex    = 9;
@@ -127,7 +127,7 @@ void setupData() {
     stripBedSide.i_pin       = PIN_D2;
     stripBedSide.i_countLeds = 60;
     stripBedSide.p_physical  = new Ledstrip(stripBedSide.i_pin, stripBedSide.i_countLeds, stripBedSide.i_brightness, stripBedSide.i_colormodus);
-  
+
     //animation
     bedSide.i_crcStorageIndex      = 16;
     bedSide.i_startStorageIndex    = 17;
@@ -140,7 +140,7 @@ void initNetwork() {
   if(wlan.b_isConnected) {
     //WLAN verbunden
     ota.p_setup->handle();
-    
+
     //prüfen, ob MQTT verbunden ist
     if(mqtt.b_isConnected) {
       //MQTT verbunden
@@ -152,13 +152,13 @@ void initNetwork() {
   } else {
     //WLAN nicht verbunden
     initWLAN();
-  
+
     //prüfen, ob WLAN verbunden
     if(!wlan.b_isConnected) {
       //WLAN nicht verbunden
       return;
     }
-    
+
     //mqtt
     initMQTT();
   }
@@ -180,7 +180,7 @@ void initWLAN() {
   //subscribs initalisieren
   mqtt.i_countTopicsToSubscribe  = 6;
   mqtt.ppc_topicsToSuscribe      = new char*[mqtt.i_countTopicsToSubscribe];
-  
+
   mqtt.ppc_topicsToSuscribe[0] = "devices";
 
   //global
@@ -197,7 +197,7 @@ void initWLAN() {
   pc_tmp = new char[255];
   (String(mqtt.ppc_topicsToSuscribe[1]) + "/bed").toCharArray(pc_tmp, 255);
   mqtt.ppc_topicsToSuscribe[3] = pc_tmp;
-  
+
   pc_tmp = new char[255];
   (String(mqtt.ppc_topicsToSuscribe[3]) + "/wall").toCharArray(pc_tmp, 255);
   mqtt.ppc_topicsToSuscribe[4] = pc_tmp;
@@ -241,7 +241,7 @@ void initMQTT() {
     return;
   }
   mqtt.p_connection->loop();
-  
+
   //send msg
   mqtt.p_connection->sendMSG(mqtt.ppc_topicsToPublish[0], "power-on");
 
@@ -253,7 +253,7 @@ void initMQTT() {
     //Strip ist im Leerlauf
     mqtt.p_connection->sendMSG(mqtt.ppc_topicsToPublish[1], "idle");
   }
-  
+
   //prüfen, ob der zustand des bedwall strips aktiv ist
   if(bedWall.p_animation->getStatus()) {
     //Strip ist aktiv
@@ -324,12 +324,12 @@ void callback(char* topic, byte* payload, unsigned int length) {
 
   payload[length] = '\0';
   char* pc_msg    = (char*) payload;
-  
+
   char c_delimiterCommand[] = ": ";
   char c_delimiterCommandContent[] = "; ";
 
   char* pc_command = strtok(pc_msg, c_delimiterCommand);
-  
+
   if(strcmp(topic, mqtt.ppc_topicsToSuscribe[0]) == 0) {
     if(strcmp(pc_command, "list-devices") == 0) {
       //device info
@@ -337,18 +337,18 @@ void callback(char* topic, byte* payload, unsigned int length) {
     }
   } else if(strcmp(topic, mqtt.ppc_topicsToSuscribe[1]) == 0) {
     //Global Conf
-    
+
     if(strcmp(pc_command, "get-conf") == 0) {
       //Konfiguration publishen
       char** ppc_configs = getConfAsJSON();
-      
+
       mqtt.p_connection->sendMSG(mqtt.ppc_topicsToPublish[0], "start");
       for(int i = 0; i < COUNT_LIGHTS; i++) {
         mqtt.p_connection->sendMSG(mqtt.ppc_topicsToPublish[0], ppc_configs[i]);
       }
       mqtt.p_connection->sendMSG(mqtt.ppc_topicsToPublish[0], "end");
-    } 
-  } else if(strcmp(topic, mqtt.ppc_topicsToSuscribe[2]) == 0 
+    }
+  } else if(strcmp(topic, mqtt.ppc_topicsToSuscribe[2]) == 0
           || strcmp(topic, mqtt.ppc_topicsToSuscribe[4]) == 0
           || strcmp(topic, mqtt.ppc_topicsToSuscribe[5]) == 0) {
     //keyboard / bedWall / bedSide
@@ -357,23 +357,23 @@ void callback(char* topic, byte* payload, unsigned int length) {
     Animation* p_animation  = NULL;
     if(strcmp(topic, mqtt.ppc_topicsToSuscribe[2]) == 0) {
       // keyboard
-      
+
       pc_topicToPublish  = mqtt.ppc_topicsToPublish[1];
       p_animation       = keyboard.p_animation;
     } else if(strcmp(topic, mqtt.ppc_topicsToSuscribe[4]) == 0){
       // bedWall
-      
+
       pc_topicToPublish = mqtt.ppc_topicsToPublish[3];
       p_animation       = bedWall.p_animation;
     } else {
       // bedSide
-      
+
       pc_topicToPublish = mqtt.ppc_topicsToPublish[4];
       p_animation       = bedSide.p_animation;
     }
-    
+
     char* pc_commandContent = strtok(NULL, " ");
-    
+
     //Art der Konfigurationsänderung prüfen
     if(strcmp(pc_command, "color") == 0) {
       //Farbe
@@ -382,7 +382,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
       int i_b = atoi(strtok(NULL, c_delimiterCommandContent));
       p_animation->setColor(p_color->getMix(i_r, i_g, i_b));
     } else if(strcmp(pc_command, "orientation") == 0) {
-      //Richtung der Animation  
+      //Richtung der Animation
       p_animation->setOrientation((strtok(pc_commandContent, c_delimiterCommandContent))[0]);
     } else if(strcmp(pc_command, "animation-typ") == 0) {
       //Art der Animation
@@ -406,13 +406,13 @@ void callback(char* topic, byte* payload, unsigned int length) {
       //Strip ist aktiv
       if(!p_animation->getStatus()) {
         p_animation->setStatus(true);
-        mqtt.p_connection->sendMSG(pc_topicToPublish, "active"); 
+        mqtt.p_connection->sendMSG(pc_topicToPublish, "active");
       }
     } else if(strcmp(pc_command, "idle") == 0) {
       //Strip ist im Leerlauf
       if(p_animation->getStatus()) {
         p_animation->setStatus(false);
-        mqtt.p_connection->sendMSG(pc_topicToPublish, "idle"); 
+        mqtt.p_connection->sendMSG(pc_topicToPublish, "idle");
       }
     } else if(strcmp(pc_command, "reload-conf") == 0) {
       //Konfiguration zurücksetzen
@@ -420,7 +420,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
       p_animation->readConf();
     } else if(strcmp(pc_command, "save-conf") == 0) {
       //Konfiguration speichern
-      p_animation->writeConf(); 
+      p_animation->writeConf();
     }
   }
 }
