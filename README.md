@@ -40,73 +40,6 @@
     </tr>
 </table>
 
-<h2>benötigte Bibliotheken</h2>
-
-<table>
-  <tr>
-    <td>
-      <b>Bibliotheksname</b>
-    </td>
-    <td>
-      <b>Quelle</b>
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-      Arduino-LED Strip
-    </td>
-    <td>
-      https://github.com/MadMax2506/Arduino-LED_Strip
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-      Arduino-Colors
-    </td>
-    <td>
-      https://github.com/MadMax2506/Arduino-Colors
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-      Arduino-Storage
-    </td>
-    <td>
-      https://github.com/MadMax2506/Arduino-Storage
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-      ESP-WLAN
-    </td>
-    <td>
-      https://github.com/MadMax2506/ESP-Wlan
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-      ESP-Refresh over the air
-    </td>
-    <td>
-      https://github.com/MadMax2506/ESP-Refresh_over_the_air
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-      ESP-MQTT
-    </td>
-    <td>
-      https://github.com/MadMax2506/ESP-MQTT
-    </td>
-  </tr>
-</table>
-
 <h2>MQTT</h2>
 
 <table>
@@ -280,3 +213,43 @@
     </td>
   </tr>
 </table>
+
+<h2>Setup</h2>
+
+<h3>ESP32 einbinden</h3>
+<ol>
+	<li>Arduino IDE  öffnen</li>
+	<li>Voreinstellungen öffnen: Datei > Voreinstellungen</li>
+	<li>
+		folgende Links zu Zusätzliche Boardverwalter URLs hinzufügen:
+        <ul>
+	        <li>https://dl.espressif.com/dl/package_esp32_index.json</li>
+			<li>https://arduino.esp8266.com/stable/package_esp8266com_index.json</li>
+		</ul>
+     </li>
+    <li>Voreinstellungen schließen</li>
+    <li>Boardverwalter  öffnen: Werkzeuge > Board > Boardverwalter</li>
+    <li>Boards von <b>esp8266 (by ESP8266 Community)</b> installieren -> <b>zu suchen: "esp8266"</b></li>
+    <li>Boardverwalter schließen </li>
+    <li>Board auswählen: Werkzeuge > Board > <b>LOLIN (Wemos) D1 R2 & mini </b></li>
+</ol>
+
+<h3>Bibliotheken einbinden</h3>
+<ol>
+	<li>Arduino IDE  öffnen</li>
+    <li>Bibliothekverwalter  öffnen: Werkzeuge > Bibliothek verwalten  </li>
+    <li>
+	    folgende Bibliotheken installieren:
+        <ul>
+	        <li>ArduinoOTA (by Arduino, Juraj Andrassy) -> <b>zu suchen: "ota"</b></li>
+	        <li>Adafruit NeoPixel (by Adafruit ) -> <b>zu suchen: "neo pixel"</b></li>
+	        <li>PubSublient (by Nick O'Leary) -> <b>zu suchen: "pubsub client"</b></li>
+		</ul>
+</ol>
+
+<h3>Refresh over the air</h3>
+<ol>
+	<li>Arduino IDE öffnen</li>
+    <li>Netzwerkschnittstelle auswählen: Werkzeuge > Port > <i>*Mac-Adresse*</i></li>
+    <li>Code hochladen</li>
+</ol>
