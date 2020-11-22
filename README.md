@@ -1,9 +1,9 @@
 # ESP-Roomlight
 
 ## Allgemein
-<ul>
-  <li>Gerätename: <code>roomlight</code></li>
-</ul>
+* Gerätename: `roomlight`
+* benötigt einen externen MQTT-Server (IP-Adresse und Port können im Quellcode angepasst werden)
+* benötigt einen WLan-Zugriff (SSID und Passwort können im Quellcode angepasst werden)
 
 <h2>Verkabelung</h2>
 
