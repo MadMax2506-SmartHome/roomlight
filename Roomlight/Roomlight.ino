@@ -1,11 +1,11 @@
-#include <Ledstrip.h>
-#include <Colors.h>
+#include "src/led_strip/Ledstrip.h"
+#include "src/colors/Colors.h"
 
-#include <WlanESP.h>
-#include <OTA_ESP.h>
-#include <MQTT_ESP.h>
+#include "src/wlan/WlanESP.h"
+#include "src/refresh_over_the_air/OTA_ESP.h"
+#include "src/mqtt/MQTT_ESP.h"
 
-#include "src/Animation/Animation.h"
+#include "src/animation/Animation.h"
 
 #define PIN_D4 2
 #define PIN_D3 0

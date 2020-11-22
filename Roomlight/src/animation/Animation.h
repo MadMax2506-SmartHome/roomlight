@@ -2,9 +2,11 @@
 #define _ANIMATION_H_
 
 #include <Arduino.h>
-#include <Storage.h>
-#include <Ledstrip.h>
-#include <Colors.h>
+
+#include "../storage/Storage.h"
+
+#include "../led_strip/Ledstrip.h"
+#include "../colors/Colors.h"
 
 class Animation {
 private:
