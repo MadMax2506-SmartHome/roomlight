@@ -20,8 +20,8 @@ struct wlan {
 
   boolean b_isConnected = false;
 
-  char* pc_ssid     = "Max";
-  char* pc_password = "handball";
+  char* pc_ssid     = "Speedwing";
+  char* pc_password = "71antenne77";
   char* pc_mac;
 
   WlanESP* p_connection;
