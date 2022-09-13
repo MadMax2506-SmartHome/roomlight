@@ -134,7 +134,7 @@
       spezifizierte Konfiguration für jede Unterteilungen des Roomlights
       <table>
         <tr>
-          <td><code>color: r;g;b;w</code></td>
+          <td><code>color: r;g;b</code></td>
           <td>Animationsfarbe <i>(abgesehen von der Rainbow-Animation)</i></td>
         </tr>
         <tr>
