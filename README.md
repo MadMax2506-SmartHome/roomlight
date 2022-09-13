@@ -193,6 +193,14 @@
             Streifen in den Zustand Leerlauf setzen
            </td>
         </tr>
+         <tr>
+          <td>
+            <code>status</code>
+           </td>
+          <td>
+            Zustand des Streifens ins Status-Topic schreiben
+           </td>
+        </tr>
         <tr>
           <td>
             <code>reload-conf</code>

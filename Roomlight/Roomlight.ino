@@ -374,6 +374,14 @@ void callback(char* topic, byte* payload, unsigned int length) {
 
     char* pc_commandContent = strtok(NULL, " ");
 
+    // Statusabfrage
+    if(strcmp(pc_command, "status") == 0) {
+      char* statusStr = NULL;
+      if(p_animation->getStatus()) { statusStr = "active"; }
+      else { statusStr = "idle"; }
+      mqtt.p_connection->sendMSG(pc_topicToPublish, statusStr);
+    }
+
     //Art der Konfigurationsänderung prüfen
     if(strcmp(pc_command, "color") == 0) {
       //Farbe
