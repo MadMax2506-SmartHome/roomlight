@@ -3,6 +3,10 @@
 
 #include <Arduino.h>
 
+#include "../Constants.h"
+#include "../../Secrets.h"
+
+#include "../mqttConfigurationHandler/MqttConfigurationHandler.h"
 #include "../storage/Storage.h"
 #include "../led_strip/Ledstrip.h"
 #include "../colors/Colors.h"
@@ -11,9 +15,6 @@
 #include "./mqtt/MQTT_ESP.h"
 #include "./refresh_over_the_air/OTA_ESP.h"
 
-#include "../Constants.h"
-#include "../../Secrets.h"
-
 #define WLAN_MAX_CONNETION_TRYS 10
 
 #define MQTT_MAX_CONNETION_TRYS 10
@@ -21,12 +22,6 @@
 
 class Network {
 private:
-  int i_countTopicsToSubscribe;
-  int i_countTopicsToPublish;
-
-  char** ppc_topicsToSuscribe;
-  char** ppc_topicsToPublish;
-
   boolean b_isWlanConnected;
   boolean b_isMqttConnected;
 
@@ -35,13 +30,34 @@ private:
   OTA_ESP* p_ota;
   MQTT_ESP* p_mqtt;
 public:
-  Network() :
+  Network(  
+    Colors* p_color,
+    Animation* p_keyboardAnimation,
+    Animation* p_bedWallAnimation,
+    Animation* p_bedSideAnimation
+  ) :
   b_isWlanConnected(false),
   b_isMqttConnected(false)
   {
     p_wlan = new WlanESP(WLAN_SSID, WLAN_PASSWORD, WLAN_MAX_CONNETION_TRYS);
     p_ota = new OTA_ESP();
-    p_mqtt = new MQTT_ESP(MQTT_SERVER_IP_ADDRESS, MQTT_SERVER_PORT, p_espClient, MQTT_MAX_CONNETION_TRYS, MQTT_RETAINED);
+    p_mqtt = new MQTT_ESP(
+      MQTT_SERVER_IP_ADDRESS,
+      MQTT_SERVER_PORT,
+      p_espClient,
+      MQTT_MAX_CONNETION_TRYS,
+      MQTT_RETAINED
+    );
+    
+    MqttConfigurationHandler* p_mqttConfigurationHandler = new MqttConfigurationHandler(
+      p_color,
+      p_keyboardAnimation,
+      p_bedWallAnimation,
+      p_bedSideAnimation,
+      p_mqtt
+    );
+
+    p_mqtt->setHandler(p_mqttConfigurationHandler);
   }
 
   void init(boolean, boolean, boolean);

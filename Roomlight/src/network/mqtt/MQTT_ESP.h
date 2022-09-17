@@ -10,6 +10,8 @@
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
 
+#include "../../mqttConfigurationHandler/MqttConfigurationHandler.h"
+
 class MQTT_ESP {
 private:
   int i_port;
@@ -24,27 +26,32 @@ private:
   byte* pbyte_ip;
 
   WiFiClient p_espClient;
+  MqttConfigurationHandler* mqttConfigurationHandler;
   PubSubClient* p_client;
 public:
-  MQTT_ESP(byte* pbyte_ip, int i_port, WiFiClient p_espClient, int i_maxConnectionTrys = 2, boolean b_retained = false) :
-  pbyte_ip(pbyte_ip),
+  MQTT_ESP(
+    byte* pbyte_ip,
+    int i_port,
+    WiFiClient p_espClient,
+    int i_maxConnectionTrys = 2,
+    boolean b_retained = false
+  ) :
   i_port(i_port),
-  p_espClient(p_espClient),
+  i_countTopicsToSubscribe(0),
   i_maxConnectionTrys(i_maxConnectionTrys),
-  b_retained(b_retained)
-  {
-    b_isMqttInit      = false;
-    b_isMqttAvailable = false;
+  b_retained(b_retained),
+  b_isMqttInit(false),
+  b_isMqttAvailable(false),
+  ppc_topicsToSubscribe(NULL),
+  pbyte_ip(pbyte_ip),
+  p_espClient(p_espClient)
+  {}
 
-    i_countTopicsToSubscribe  = 0;
-    ppc_topicsToSubscribe     = NULL;
-  }
-
+  void setHandler(MqttConfigurationHandler* mqttConfigurationHandler);
   void setRetained(boolean);
 
-  boolean connect(void callback(char*, byte*, unsigned int));
-  boolean connect(char**, int, void callback(char*, byte*, unsigned int));
-
+  boolean connect();
+  boolean connect(char**, int);
   boolean reconnect();
 
   void loop();

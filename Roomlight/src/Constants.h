@@ -17,6 +17,10 @@
 #define PIN_D2 4
 #define PIN_D1 5
 
+// mqtt
+#define MQTT_COUNT_TOPICS_TO_SUBSCRIBE 6
+#define MQTT_COUNT_TOPICS_TO_PUBLISH 5
+
 // lights
 #define COUNT_LIGHTS 3
 #define BRIGHTNESS 250

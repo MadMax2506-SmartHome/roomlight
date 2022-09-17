@@ -40,8 +40,7 @@ void Network::initWLAN() {
 
   //mqtt
   //subscribs initalisieren
-  Network::i_countTopicsToSubscribe = 6;
-  Network::ppc_topicsToSuscribe = new char*[Network::i_countTopicsToSubscribe];
+  Network::ppc_topicsToSuscribe = new char*[MQTT_COUNT_TOPICS_TO_SUBSCRIBE];
 
   Network::ppc_topicsToSuscribe[0] = "devices";
 
@@ -69,8 +68,7 @@ void Network::initWLAN() {
   Network::ppc_topicsToSuscribe[5] = pc_tmp;
 
   //publishes initalisieren
-  Network::i_countTopicsToPublish = 5;
-  Network::ppc_topicsToPublish    = new char*[Network::i_countTopicsToPublish];
+  Network::ppc_topicsToPublish = new char*[MQTT_COUNT_TOPICS_TO_PUBLISH];
 
   //global
   pc_tmp = new char[255];
@@ -98,7 +96,7 @@ void Network::initWLAN() {
 
 void Network::initMQTT(boolean b_isKeyboardActive, boolean b_isBedWallActive, boolean b_isBedSideActive) {
   //prüfen, ob MQTT verbunden
-  if(!(Network::b_isMqttConnected = Network::p_mqtt->connect(Network::ppc_topicsToSuscribe, Network::i_countTopicsToSubscribe, callback))) {
+  if(!(Network::b_isMqttConnected = Network::p_mqtt->connect(Network::ppc_topicsToSuscribe, Network::i_countTopicsToSubscribe))) {
     //MQTT nicht verbunden
     return;
   }
