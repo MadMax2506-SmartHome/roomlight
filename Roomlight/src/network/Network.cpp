@@ -31,10 +31,16 @@ void Network::initMQTT(Colors* p_color, Device* p_keyboardDevice, Device* p_bedW
     p_bedSideDevice
   );
 
-  char** ppc_topicsToSuscribe = new char*[2];
+  const int i_numberOfTopicsToSuscribe = 4;
+  char** ppc_topicsToSuscribe = new char*[i_numberOfTopicsToSuscribe];
+  ppc_topicsToSuscribe[0] = (char *) String(MQTT_GLOBAL_CONF_TOPIC).c_str();
+  ppc_topicsToSuscribe[1] = p_keyboardDevice->getConfigTopicAsPointer();
+  ppc_topicsToSuscribe[2] = p_bedWallDevice->getConfigTopicAsPointer();
+  ppc_topicsToSuscribe[3] = p_bedSideDevice->getConfigTopicAsPointer();
+
   b_isMqttConnected = p_mqtt->connect(
     ppc_topicsToSuscribe,
-    MQTT_COUNT_TOPICS_TO_SUBSCRIBE,  
+    i_numberOfTopicsToSuscribe,  
     [mqttCallbackHandler](char* pc_topic, u_int8_t* pi_payload, unsigned int i_length){
       return mqttCallbackHandler->onMqttPayload(pc_topic, pi_payload, i_length);
     }

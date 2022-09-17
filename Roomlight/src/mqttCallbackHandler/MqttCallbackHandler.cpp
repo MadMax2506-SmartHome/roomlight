@@ -7,7 +7,7 @@ void MqttCallbackHandler::onMqttPayload(char* pc_topic, u_int8_t* pi_payload, un
   String s_payload = (char*) pi_payload;
   
   String s_command = s_payload.substring(0, s_payload.indexOf((": ")));
-  String s_value = s_payload.substring(s_command.length());
+  String s_value = s_command.length() == s_payload.length() ? "" : s_payload.substring(s_command.length());
 
   handleMqttPayload(
     pc_topic,
@@ -22,23 +22,27 @@ void MqttCallbackHandler::handleMqttPayload(String s_topic, String s_command, St
 
   if(s_topic.equals(MQTT_GLOBAL_CONF_TOPIC)) {
     if(s_command.equals("list-devices")) {
-      // TODO
       //device info
-      p_mqtt->sendMSG(
-        MQTT_GLOBAL_STATUS_TOPIC,
-        ""
-      );
+     listDevice(p_keyboardDevice);
+     listDevice(p_bedWallDevice);
+     listDevice(p_bedSideDevice);
     }
-  } else if(s_topic.equals("TODO keyboard")) {
-    handleDevice(p_keyboardDevice, "TODO keyboard", s_command, s_value);
-  } else if(s_topic.equals("TODO bed wall")) {
-    handleDevice(p_bedWallDevice, "TODO bed wall", s_command, s_value);
-  } else if(s_topic.equals("TODO bed side")) {
-    handleDevice(p_bedSideDevice, "TODO bed side", s_command, s_value);
+  } else if(s_topic.equals(p_keyboardDevice->getConfigTopic())) {
+    handleDeviceConfigurations(p_keyboardDevice, s_command, s_value);
+  } else if(s_topic.equals(p_bedWallDevice->getConfigTopic())) {
+    handleDeviceConfigurations(p_bedWallDevice, s_command, s_value);
+  } else if(s_topic.equals(p_bedSideDevice->getConfigTopic())) {
+    handleDeviceConfigurations(p_bedSideDevice, s_command, s_value);
   }
 }
 
-void MqttCallbackHandler::handleDevice(Device* p_device, char* pc_topicToPublish, String s_command, String s_value) {
+void MqttCallbackHandler::listDevice(Device* p_device) {
+  char* pc_status_topic = (char *) String(MQTT_GLOBAL_STATUS_TOPIC).c_str();
+  p_mqtt->sendMSG(pc_status_topic, p_device->getData());
+}
+
+void MqttCallbackHandler::handleDeviceConfigurations(Device* p_device, String s_command, String s_value) {
+  char* pc_topicToPublish = p_device->getStatusTopicAsPointer();
   Animation* p_animation = p_device->p_animation;
 
   //Art der Konfigurationsänderung prüfen
@@ -86,5 +90,8 @@ void MqttCallbackHandler::handleDevice(Device* p_device, char* pc_topicToPublish
   } else if(s_command.equals("save-conf")) {
     //Konfiguration speichern
     p_animation->writeConf();
+  }else if(s_command.equals("get-conf")) {
+    //Konfiguration ausgeben
+      p_mqtt->sendMSG(pc_topicToPublish, p_device->getConfiguration());
   }
 }

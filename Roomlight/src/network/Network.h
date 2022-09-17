@@ -6,6 +6,7 @@
 #include "./wlan/WlanESP.h"
 
 #include "../../Secrets.h"
+#include "../Constants.h"
 #include "../device/Device.h"
 #include "../mqttCallbackHandler/MqttCallbackHandler.h"
 

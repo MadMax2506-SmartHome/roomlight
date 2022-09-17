@@ -16,7 +16,8 @@ private:
   Device* p_bedSideDevice;
 
   void handleMqttPayload(String, String, String);
-  void handleDevice(Device*, char*, String, String);
+  void listDevice(Device*);
+  void handleDeviceConfigurations(Device*, String, String);
 public:
   MqttCallbackHandler(
     MQTT_ESP* p_mqtt,

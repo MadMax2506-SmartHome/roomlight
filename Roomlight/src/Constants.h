@@ -3,9 +3,7 @@
 
 // general
 #define DEVICE_NAME "roomlight"
-
 #define COUNT_LIGHTS 3
-#define BRIGHTNESS 250
 
 // pins
 #define PIN_D4 2
@@ -14,9 +12,10 @@
 #define PIN_D1 5
 
 // mqtt
-#define MQTT_GLOBAL_CONF_TOPIC "conf/devices"
-#define MQTT_GLOBAL_STATUS_TOPIC "status/devices"
+#define MQTT_CONF_TOPIC "conf"
+#define MQTT_GLOBAL_CONF_TOPIC String(MQTT_CONF_TOPIC) + "/devices"
 
-#define MQTT_COUNT_TOPICS_TO_SUBSCRIBE 6
+#define MQTT_STATUS_TOPIC "status"
+#define MQTT_GLOBAL_STATUS_TOPIC String(MQTT_STATUS_TOPIC) + "/devices"
 
 #endif //_CONSTANTS_H_
