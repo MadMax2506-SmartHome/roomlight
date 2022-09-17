@@ -40,7 +40,8 @@ void Network::initWLAN() {
 
   //mqtt
   //subscribs initalisieren
-  Network::ppc_topicsToSuscribe = new char*[MQTT_COUNT_TOPICS_TO_SUBSCRIBE];
+  // TODO
+  /*Network::ppc_topicsToSuscribe = new char*[MQTT_COUNT_TOPICS_TO_SUBSCRIBE];
 
   Network::ppc_topicsToSuscribe[0] = "devices";
 
@@ -92,10 +93,12 @@ void Network::initWLAN() {
   pc_tmp = new char[255];
   (String(Network::ppc_topicsToPublish[2]) + "/side").toCharArray(pc_tmp, 255);
   Network::ppc_topicsToPublish[4] = pc_tmp;
+  */
 }
 
 void Network::initMQTT(boolean b_isKeyboardActive, boolean b_isBedWallActive, boolean b_isBedSideActive) {
-  //prüfen, ob MQTT verbunden
+  // TODO
+  /*//prüfen, ob MQTT verbunden
   if(!(Network::b_isMqttConnected = Network::p_mqtt->connect(Network::ppc_topicsToSuscribe, Network::i_countTopicsToSubscribe))) {
     //MQTT nicht verbunden
     return;
@@ -131,4 +134,5 @@ void Network::initMQTT(boolean b_isKeyboardActive, boolean b_isBedWallActive, bo
     //Strip ist im Leerlauf
     Network::p_mqtt->sendMSG(Network::ppc_topicsToPublish[4], "idle");
   }
+  */
 }
