@@ -20,15 +20,33 @@ void setup() {
 
   // keyboard
   stripKeyboard = new Ledstrip(PIN_D4, KEYBOARD_STRIP_LEDS, BRIGHTNESS, MODUS_RGB);
-  keyboardAnimation = new Animation(stripKeyboard, p_color, KEYBOARD_CONFIG_CRC_STORAGE_INDEX, KEYBOARD_CONFIG_START_STORAGE_INDEX, KEYBOARD_CONFIG_END_STORAGE_INDEX);
+  keyboardAnimation = new Animation(
+    stripKeyboard,
+    p_color,
+    KEYBOARD_CONFIG_CRC_STORAGE_INDEX,
+    KEYBOARD_CONFIG_START_STORAGE_INDEX,
+    KEYBOARD_CONFIG_END_STORAGE_INDEX
+  );
 
   //bed-wall
   stripBedWall = new Ledstrip(PIN_D3, BED_WALL_STRIP_LEDS, BRIGHTNESS, MODUS_RGB);
-  bedWallAnimation = new Animation(stripBedWall, p_color, BED_WALL_CONFIG_CRC_STORAGE_INDEX, BED_WALL_CONFIG_START_STORAGE_INDEX, BED_WALL_CONFIG_END_STORAGE_INDEX);
+  bedWallAnimation = new Animation(
+    stripBedWall,
+    p_color,
+    BED_WALL_CONFIG_CRC_STORAGE_INDEX,
+    BED_WALL_CONFIG_START_STORAGE_INDEX,
+    BED_WALL_CONFIG_END_STORAGE_INDEX
+  );
 
   //bed-side
   stripBedSide = new Ledstrip(PIN_D2, BED_SIDE_STRIP_LEDS, BRIGHTNESS, MODUS_RGB);
-  bedSideAnimation = new Animation(stripBedSide, p_color, BED_SIDE_CONFIG_CRC_STORAGE_INDEX, BED_SIDE_CONFIG_START_STORAGE_INDEX, BED_SIDE_CONFIG_END_STORAGE_INDEX);
+  bedSideAnimation = new Animation(
+    stripBedSide,
+    p_color,
+    BED_SIDE_CONFIG_CRC_STORAGE_INDEX,
+    BED_SIDE_CONFIG_START_STORAGE_INDEX,
+    BED_SIDE_CONFIG_END_STORAGE_INDEX
+  );
 }
 
 void loop() {
@@ -36,7 +54,11 @@ void loop() {
   bedSideAnimation->animate();
   keyboardAnimation->animate();
 
-  network->init(keyboardAnimation->getStatus(), bedWallAnimation->getStatus(), bedSideAnimation->getStatus());
+  network->init(
+    keyboardAnimation->getStatus(),
+    bedWallAnimation->getStatus(),
+    bedSideAnimation->getStatus()
+  );
 }
 
 char** getConfAsJSON() {
