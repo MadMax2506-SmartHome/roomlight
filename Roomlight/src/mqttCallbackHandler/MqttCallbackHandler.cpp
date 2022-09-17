@@ -1,4 +1,6 @@
-void onMqttPayload(char* pc_topic, u_int8_t* pi_payload, unsigned int i_length) {
+#include "MqttCallbackHandler.h"
+
+void MqttCallbackHandler::onMqttPayload(char* pc_topic, u_int8_t* pi_payload, unsigned int i_length) {
   if(i_length == 0) return;
   pi_payload[i_length] = '\0'; // close the string
 
@@ -14,7 +16,7 @@ void onMqttPayload(char* pc_topic, u_int8_t* pi_payload, unsigned int i_length) 
   );  
 }
 
-void handleMqttPayload(String s_topic, String s_command, String s_value) {
+void MqttCallbackHandler::handleMqttPayload(String s_topic, String s_command, String s_value) {
   // TODO
   if(!s_topic.startsWith("conf/")) return;
 
@@ -24,7 +26,7 @@ void handleMqttPayload(String s_topic, String s_command, String s_value) {
       //device info
       p_mqtt->sendMSG(
         MQTT_GLOBAL_STATUS_TOPIC,
-        getDeviceInfoAsJSON()
+        ""
       );
     }
   } else if(s_topic.equals("TODO keyboard")) {
@@ -36,7 +38,7 @@ void handleMqttPayload(String s_topic, String s_command, String s_value) {
   }
 }
 
-void handleAnimation(Animation* p_animation, char* pc_topicToPublish, String s_command, String s_value) {
+void MqttCallbackHandler::handleAnimation(Animation* p_animation, char* pc_topicToPublish, String s_command, String s_value) {
   //Art der Konfigurationsänderung prüfen
   if(s_command.equals("color")) {
     //Farbe
@@ -84,8 +86,3 @@ void handleAnimation(Animation* p_animation, char* pc_topicToPublish, String s_c
     p_animation->writeConf();
   }
 }
-
-// TODO
-char** getConfAsJSON() {}
-
-char* getDeviceInfoAsJSON() {}

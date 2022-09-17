@@ -10,6 +10,8 @@
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
 
+#include "../../mqttCallbackHandler/MqttCallbackHandler.h"
+
 class MQTT_ESP {
 private:
   int i_port;
@@ -46,8 +48,8 @@ public:
 
   void setRetained(boolean);
 
-  boolean connect(MQTT_CALLBACK_SIGNATURE);
-  boolean connect(char**, int, MQTT_CALLBACK_SIGNATURE);
+  boolean connect(MqttCallbackHandler *);
+  boolean connect(char**, int,  MqttCallbackHandler *);
   boolean reconnect();
 
   void loop();

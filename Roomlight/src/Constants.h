@@ -6,12 +6,9 @@
 
 #include "./led_strip/Ledstrip.h"
 #include "./colors/Colors.h"
-
 #include "./animation/Animation.h"
-
-#include "./network/mqtt/MQTT_ESP.h"
-#include "./network/refresh_over_the_air/OTA_ESP.h"
-#include "./network/wlan/WlanESP.h"
+#include "./network/Network.h"
+#include "./mqttCallbackHandler/MqttCallbackHandler.h"
 
 // general
 #define DEVICE_NAME "roomlight"
