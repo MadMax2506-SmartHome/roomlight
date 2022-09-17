@@ -11,7 +11,7 @@ boolean WlanESP::connect() {
 
   //versucht eine Verbindung aufzubauen (maximal: i_maxTrys)
   int i_trys = 0;
-  b_isAvailable =  true;
+  b_isAvailable = true;
   while (p_WiFiMulti.run() != WL_CONNECTED) {
     if(i_trys == i_maxTrys) {
       b_isAvailable = false;

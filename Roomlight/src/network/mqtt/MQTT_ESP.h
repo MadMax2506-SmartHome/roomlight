@@ -10,8 +10,6 @@
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
 
-#include "../../mqttConfigurationHandler/MqttConfigurationHandler.h"
-
 class MQTT_ESP {
 private:
   int i_port;
@@ -26,7 +24,6 @@ private:
   byte* pbyte_ip;
 
   WiFiClient p_espClient;
-  MqttConfigurationHandler* mqttConfigurationHandler;
   PubSubClient* p_client;
 public:
   MQTT_ESP(
@@ -47,11 +44,10 @@ public:
   p_espClient(p_espClient)
   {}
 
-  void setHandler(MqttConfigurationHandler* mqttConfigurationHandler);
   void setRetained(boolean);
 
-  boolean connect();
-  boolean connect(char**, int);
+  boolean connect(MQTT_CALLBACK_SIGNATURE);
+  boolean connect(char**, int, MQTT_CALLBACK_SIGNATURE);
   boolean reconnect();
 
   void loop();

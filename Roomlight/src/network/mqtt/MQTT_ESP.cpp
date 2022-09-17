@@ -5,15 +5,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-void MQTT_ESP::setHandler(MqttConfigurationHandler* mqttConfigurationHandler) {
-  MQTT_ESP::mqttConfigurationHandler = mqttConfigurationHandler;
-}
-
 void MQTT_ESP::setRetained(boolean b_retained) {
   MQTT_ESP::b_retained = b_retained;
 }
 
-boolean MQTT_ESP::connect() {
+boolean MQTT_ESP::connect(MQTT_CALLBACK_SIGNATURE) {
   //neuer client
   p_client = new PubSubClient(p_espClient);
 
@@ -21,7 +17,7 @@ boolean MQTT_ESP::connect() {
   p_client->setServer(pbyte_ip, i_port);
 
   //callback function setzen
-  p_client->setCallback(MQTT_ESP::mqttConfigurationHandler->callback);
+  p_client->setCallback(callback);
  
   //initalisieren
   b_isMqttInit = true;
@@ -29,13 +25,13 @@ boolean MQTT_ESP::connect() {
   return reconnect();
 }
 
-boolean MQTT_ESP::connect(char** ppc_topicsToSubscribe, int i_countTopicsToSubscribe) {
+boolean MQTT_ESP::connect(char** ppc_topicsToSubscribe, int i_countTopicsToSubscribe, MQTT_CALLBACK_SIGNATURE) {
   //topics zum subscriben und  anzahl, der topics zum subscriben setzen
   MQTT_ESP::ppc_topicsToSubscribe = ppc_topicsToSubscribe;
   MQTT_ESP::i_countTopicsToSubscribe = i_countTopicsToSubscribe;
 
   //verbindung initalisieren
-  return connect();
+  return connect(callback);
 }
 
 boolean MQTT_ESP::reconnect() {
