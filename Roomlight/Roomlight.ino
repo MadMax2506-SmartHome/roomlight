@@ -1,26 +1,6 @@
 #include "./src/Constants.h"
 
-OTA_ESP* ota;
-
-struct wlan {
-  boolean b_isConnected = false;
-  char* pc_mac;
-
-  WlanESP* p_connection;
-  WiFiClient p_espClient;
-} wlan;
-
-struct mqtt {
-  int i_countTopicsToSubscribe;
-  int i_countTopicsToPublish;
-
-  boolean b_isConnected = false;
-
-  char** ppc_topicsToSuscribe;
-  char** ppc_topicsToPublish;
-
-  MQTT_ESP* p_connection;
-} mqtt;
+Network* network;
 
 Colors* p_color;
 
@@ -35,10 +15,7 @@ Animation* bedSideAnimation;
 void setup() {
   Serial.begin(9600);
 
-  wlan.p_connection = new WlanESP(WLAN_SSID, WLAN_PASSWORD, WLAN_MAX_CONNETION_TRYS);
-  ota = new OTA_ESP();
-  mqtt.p_connection = new MQTT_ESP(MQTT_SERVER_IP_ADDRESS, MQTT_SERVER_PORT, wlan.p_espClient, MQTT_MAX_CONNETION_TRYS, MQTT_RETAINED);
-
+  network = new Network();
   p_color = new Colors(MODUS_RGB);
 
   // keyboard
@@ -59,7 +36,7 @@ void loop() {
   bedSideAnimation->animate();
   keyboardAnimation->animate();
 
-  initNetwork();
+  network->init(keyboardAnimation->getStatus(), bedWallAnimation->getStatus(), bedSideAnimation->getStatus());
 }
 
 char** getConfAsJSON() {
