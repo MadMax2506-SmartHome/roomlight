@@ -1,3 +1,5 @@
+#include "./Environment_Variables.h"
+
 #include "src/led_strip/Ledstrip.h"
 #include "src/colors/Colors.h"
 
@@ -19,31 +21,23 @@ struct wlan {
   int i_maxConnectionTrys = 10;
 
   boolean b_isConnected = false;
-
-  char* pc_ssid     = "Speedwing";
-  char* pc_password = "71antenne77";
   char* pc_mac;
 
   WlanESP* p_connection;
   WiFiClient p_espClient;
 } wlan;
 
-struct ota {
-  char* pc_password = "madmax";
-  OTA_ESP* p_setup;
-} ota;
+OTA_ESP* ota;
 
 struct mqtt {
-  byte* pbyte_ip                      = new byte[4]{192, 168, 178, 150};
-  int i_port                          = 1883;
-  int i_maxConnectionTrys             = 2;
+  byte* pbyte_ip = new byte[4]{192, 168, 178, 150};
+  int i_port = 1883;
+  int i_maxConnectionTrys = 2;
   int i_countTopicsToSubscribe;
   int i_countTopicsToPublish;
 
-  boolean b_retained       = false;
-  boolean b_isConnected    = false;
-
-  char* devicename  = "roomlight"; // wichtig für von außen darauf zugreifende Anwendungen
+  boolean b_retained = false;
+  boolean b_isConnected = false;
 
   char** ppc_topicsToSuscribe;
   char** ppc_topicsToPublish;
@@ -87,10 +81,10 @@ void setupData() {
   Serial.begin(9600);
 
   //wlan
-  wlan.p_connection = new WlanESP(wlan.pc_ssid, wlan.pc_password, wlan.i_maxConnectionTrys);
+  wlan.p_connection = new WlanESP(WLAN_SSID, WLAN_PASSWORD, wlan.i_maxConnectionTrys);
 
   //ota
-  ota.p_setup = new OTA_ESP();
+  ota = new OTA_ESP();
 
   //mqtt
   mqtt.p_connection = new MQTT_ESP(mqtt.pbyte_ip, mqtt.i_port, wlan.p_espClient, mqtt.i_maxConnectionTrys, mqtt.b_retained);
@@ -98,48 +92,43 @@ void setupData() {
   //color erstellen
   p_color = new Colors(stripKeyboard.i_colormodus);
 
-//keyboardlight
-  //ledstrip erstellen
-  stripKeyboard.i_pin           = PIN_D4;
-  stripKeyboard.i_countLeds     = 12;
-  stripKeyboard.p_physical      = new Ledstrip(stripKeyboard.i_pin, stripKeyboard.i_countLeds, stripKeyboard.i_brightness, stripKeyboard.i_colormodus);
+  // keyboard
+  stripKeyboard.i_pin       = PIN_D4;
+  stripKeyboard.i_countLeds = 12;
+  stripKeyboard.p_physical  = new Ledstrip(stripKeyboard.i_pin, stripKeyboard.i_countLeds, stripKeyboard.i_brightness, stripKeyboard.i_colormodus);
 
-  //animation
-  keyboard.i_crcStorageIndex      = 0;
-  keyboard.i_startStorageIndex    = 1;
-  keyboard.i_endStorageIndex      = 7;
-  keyboard.p_animation            = new Animation(stripKeyboard.p_physical, p_color, keyboard.i_crcStorageIndex, keyboard.i_startStorageIndex, keyboard.i_endStorageIndex);
+  keyboard.i_crcStorageIndex    = 0;
+  keyboard.i_startStorageIndex  = 1;
+  keyboard.i_endStorageIndex    = 7;
+  keyboard.p_animation          = new Animation(stripKeyboard.p_physical, p_color, keyboard.i_crcStorageIndex, keyboard.i_startStorageIndex, keyboard.i_endStorageIndex);
 
-//bedlight - wall
-  //ledstrip erstellen
-    stripBedWall.i_pin       = PIN_D3;
-    stripBedWall.i_countLeds = 60;
-    stripBedWall.p_physical  = new Ledstrip(stripBedWall.i_pin, stripBedWall.i_countLeds, stripBedWall.i_brightness, stripBedWall.i_colormodus);
+  //bed-wall
+  stripBedWall.i_pin       = PIN_D3;
+  stripBedWall.i_countLeds = 60;
+  stripBedWall.p_physical  = new Ledstrip(stripBedWall.i_pin, stripBedWall.i_countLeds, stripBedWall.i_brightness, stripBedWall.i_colormodus);
 
-    //animation
-    bedWall.i_crcStorageIndex      = 8;
-    bedWall.i_startStorageIndex    = 9;
-    bedWall.i_endStorageIndex      = 15;
-    bedWall.p_animation            = new Animation(stripBedWall.p_physical, p_color, bedWall.i_crcStorageIndex, bedWall.i_startStorageIndex, bedWall.i_endStorageIndex);
 
-//bedlight -side
-  //ledstrip erstellen
-    stripBedSide.i_pin       = PIN_D2;
-    stripBedSide.i_countLeds = 60;
-    stripBedSide.p_physical  = new Ledstrip(stripBedSide.i_pin, stripBedSide.i_countLeds, stripBedSide.i_brightness, stripBedSide.i_colormodus);
+  bedWall.i_crcStorageIndex   = 8;
+  bedWall.i_startStorageIndex = 9;
+  bedWall.i_endStorageIndex   = 15;
+  bedWall.p_animation         = new Animation(stripBedWall.p_physical, p_color, bedWall.i_crcStorageIndex, bedWall.i_startStorageIndex, bedWall.i_endStorageIndex);
 
-    //animation
-    bedSide.i_crcStorageIndex      = 16;
-    bedSide.i_startStorageIndex    = 17;
-    bedSide.i_endStorageIndex      = 23;
-    bedSide.p_animation            = new Animation(stripBedSide.p_physical, p_color, bedSide.i_crcStorageIndex, bedSide.i_startStorageIndex, bedSide.i_endStorageIndex);
+  //bed-side
+  stripBedSide.i_pin        = PIN_D2;
+  stripBedSide.i_countLeds  = 60;
+  stripBedSide.p_physical   = new Ledstrip(stripBedSide.i_pin, stripBedSide.i_countLeds, stripBedSide.i_brightness, stripBedSide.i_colormodus);
+
+  bedSide.i_crcStorageIndex   = 16;
+  bedSide.i_startStorageIndex = 17;
+  bedSide.i_endStorageIndex   = 23;
+  bedSide.p_animation         = new Animation(stripBedSide.p_physical, p_color, bedSide.i_crcStorageIndex, bedSide.i_startStorageIndex, bedSide.i_endStorageIndex);
 }
 
 void initNetwork() {
   //prüfen, ob WLAN verbunden ist
   if(wlan.b_isConnected) {
     //WLAN verbunden
-    ota.p_setup->handle();
+    ota->handle();
 
     //prüfen, ob MQTT verbunden ist
     if(mqtt.b_isConnected) {
@@ -174,7 +163,7 @@ void initWLAN() {
   wlan.pc_mac = wlan.p_connection->getMac();
 
   //ota initalisieren
-  ota.p_setup->init(wlan.pc_mac, ota.pc_password);
+  ota->init(wlan.pc_mac, OTA_PASSWORD);
 
   //mqtt
   //subscribs initalisieren
@@ -298,7 +287,7 @@ char* getDeviceInfoAsJSON() {
   String str_json = "{";
 
   //name
-  str_json+= "\"name\": \"" + String(mqtt.devicename) + "\",";
+  str_json+= "\"name\": \"" + String(DEVICE_NAME) + "\",";
 
   //mac-Adresse
   str_json+= "\"mac-address\": \"" + String(wlan.pc_mac) + "\",";
