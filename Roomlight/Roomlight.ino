@@ -1,9 +1,7 @@
 #include "./Secrets.h"
 #include "./src/Constants.h"
 
-#include "./src/led_strip/Ledstrip.h"
-#include "./src/colors/Colors.h"
-#include "./src/animation/Animation.h"
+#include "./src/device/Device.h"
 #include "./src/network/Network.h"
 
 WlanESP* p_wlan;
@@ -13,13 +11,9 @@ MQTT_ESP* p_mqtt;
 Network* p_network;
 
 Colors* p_color;
-Ledstrip* p_stripKeyboard;
-Ledstrip* p_stripBedWall;
-Ledstrip* p_stripBedSide;
-
-Animation* p_keyboardAnimation;
-Animation* p_bedWallAnimation;
-Animation* p_bedSideAnimation;
+Device* p_keyboardDevice;
+Device* p_bedWallDevice;
+Device* p_bedSideDevice;
 
 void setup() {
   Serial.begin(9600);
@@ -30,47 +24,20 @@ void setup() {
   p_network = new Network(p_wlan, p_ota, p_mqtt);
 
   p_color = new Colors(MODUS_RGB);
-
-  // keyboard
-  p_stripKeyboard = new Ledstrip(PIN_D4, DEVICE_KEYBOARD_COUNT_LEDS, BRIGHTNESS, MODUS_RGB);
-  p_keyboardAnimation = new Animation(
-    p_stripKeyboard,
-    p_color,
-    DEVICE_KEYBOARD_CRC_STORAGE_INDEX,
-    DEVICE_KEYBOARD_START_STORAGE_INDEX,
-    DEVICE_KEYBOARD_END_STORAGE_INDEX
-  );
-
-  //bed-wall
-  p_stripBedWall = new Ledstrip(PIN_D3, DEVICE_BEDWALL_COUNT_LEDS, BRIGHTNESS, MODUS_RGB);
-  p_bedWallAnimation = new Animation(
-    p_stripBedWall,
-    p_color,
-    DEVICE_BEDWALL_CRC_STORAGE_INDEX,
-    DEVICE_BEDWALL_START_STORAGE_INDEX,
-    DEVICE_BEDWALL_END_STORAGE_INDEX
-  );
-
-  //bed-side
-  p_stripBedSide = new Ledstrip(PIN_D2, DEVICE_BEDSIDE_COUNT_LEDS, BRIGHTNESS, MODUS_RGB);
-  p_bedSideAnimation = new Animation(
-    p_stripBedSide,
-    p_color,
-    DEVICE_BEDSIDE_CRC_STORAGE_INDEX,
-    DEVICE_BEDSIDE_START_STORAGE_INDEX,
-    DEVICE_BEDSIDE_END_STORAGE_INDEX
-  );
+  p_keyboardDevice = new Device("deskLightingKeyboard", PIN_D4, 12, 0, 1, 7, p_color);
+  p_bedWallDevice = new Device("deskLightingBedWall", PIN_D3, 60, 8, 9, 15, p_color);
+  p_bedSideDevice = new Device("deskLightingBedSide", PIN_D2, 60, 16, 17, 23, p_color);
 }
 
 void loop() {
-  p_bedWallAnimation->animate();
-  p_bedSideAnimation->animate();
-  p_keyboardAnimation->animate();
+  p_keyboardDevice->animate();
+  p_bedWallDevice->animate();
+  p_bedSideDevice->animate();
 
   p_network->init(
     p_color,
-    p_keyboardAnimation,
-    p_bedWallAnimation,
-    p_bedSideAnimation
+    p_keyboardDevice,
+    p_bedWallDevice,
+    p_bedSideDevice
   );
 }

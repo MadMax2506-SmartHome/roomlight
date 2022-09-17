@@ -5,31 +5,31 @@
 
 #include "../Constants.h"
 #include "../network/Network.h"
-#include "../animation/Animation.h"
+#include "../device/Device.h"
 
 class MqttCallbackHandler {
 private:
   MQTT_ESP* p_mqtt;
   Colors* p_color;
-  Animation* p_keyboardAnimation;
-  Animation* p_bedWallAnimation;
-  Animation* p_bedSideAnimation;
+  Device* p_keyboardDevice;
+  Device* p_bedWallDevice;
+  Device* p_bedSideDevice;
 
   void handleMqttPayload(String, String, String);
-  void handleAnimation(Animation*, char*, String, String);
+  void handleDevice(Device*, char*, String, String);
 public:
   MqttCallbackHandler(
     MQTT_ESP* p_mqtt,
     Colors* p_color,
-    Animation* p_keyboardAnimation,
-    Animation* p_bedWallAnimation,
-    Animation* p_bedSideAnimation
+    Device* p_keyboardDevice,
+    Device* p_bedWallDevice,
+    Device* p_bedSideDevice
   ) :
   p_mqtt(p_mqtt),
   p_color(p_color),
-  p_keyboardAnimation(p_keyboardAnimation),
-  p_bedWallAnimation(p_bedWallAnimation),
-  p_bedSideAnimation(p_bedSideAnimation)
+  p_keyboardDevice(p_keyboardDevice),
+  p_bedWallDevice(p_bedWallDevice),
+  p_bedSideDevice(p_bedSideDevice)
   {};
 
   void onMqttPayload(char*, u_int8_t*, unsigned int);

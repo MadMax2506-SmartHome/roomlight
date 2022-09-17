@@ -6,8 +6,7 @@
 #include "./wlan/WlanESP.h"
 
 #include "../../Secrets.h"
-#include "../animation/Animation.h"
-#include "../colors/Colors.h"
+#include "../device/Device.h"
 #include "../mqttCallbackHandler/MqttCallbackHandler.h"
 
 class Network {
@@ -20,8 +19,8 @@ private:
   MQTT_ESP* p_mqtt;
 
   void initWLAN();
-  void initMQTT(Colors*, Animation*, Animation*, Animation*);
-  void initSingleMqttDevice(Animation*, char*);
+  void initMQTT(Colors*, Device*, Device*, Device*);
+  void initSingleMqttDevice(Device*, char*);
 public:
   Network(WlanESP* p_wlan, OTA_ESP* p_ota, MQTT_ESP* p_mqtt) :
   b_isWlanConnected(false),
@@ -31,7 +30,7 @@ public:
   p_mqtt(p_mqtt)
   {};
 
-  void init(Colors*, Animation*, Animation*, Animation*);
+  void init(Colors*, Device*, Device*, Device*);
 };
 
 #endif //_NETWORK_H_

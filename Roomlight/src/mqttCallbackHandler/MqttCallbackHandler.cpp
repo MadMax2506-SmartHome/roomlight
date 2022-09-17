@@ -30,15 +30,17 @@ void MqttCallbackHandler::handleMqttPayload(String s_topic, String s_command, St
       );
     }
   } else if(s_topic.equals("TODO keyboard")) {
-    handleAnimation(p_keyboardAnimation, "TODO keyboard", s_command, s_value);
+    handleDevice(p_keyboardDevice, "TODO keyboard", s_command, s_value);
   } else if(s_topic.equals("TODO bed wall")) {
-    handleAnimation(p_bedWallAnimation, "TODO bed wall", s_command, s_value);
+    handleDevice(p_bedWallDevice, "TODO bed wall", s_command, s_value);
   } else if(s_topic.equals("TODO bed side")) {
-    handleAnimation(p_bedSideAnimation, "TODO bed side", s_command, s_value);
+    handleDevice(p_bedSideDevice, "TODO bed side", s_command, s_value);
   }
 }
 
-void MqttCallbackHandler::handleAnimation(Animation* p_animation, char* pc_topicToPublish, String s_command, String s_value) {
+void MqttCallbackHandler::handleDevice(Device* p_device, char* pc_topicToPublish, String s_command, String s_value) {
+  Animation* p_animation = p_device->p_animation;
+
   //Art der Konfigurationsänderung prüfen
   if(s_command.equals("color")) {
     //Farbe
