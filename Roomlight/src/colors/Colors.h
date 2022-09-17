@@ -13,7 +13,7 @@ class Colors {
 private:
   int i_modus;
 public:
-  Colors(int i_modus = 0):
+  Colors(int i_modus = MODUS_RGB):
   i_modus(i_modus)
   {}
 

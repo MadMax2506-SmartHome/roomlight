@@ -1,11 +1,8 @@
 #include "./src/Constants.h"
 
-//netwok
 OTA_ESP* ota;
 
 struct wlan {
-  int i_maxConnectionTrys = 10;
-
   boolean b_isConnected = false;
   char* pc_mac;
 
@@ -14,11 +11,9 @@ struct wlan {
 } wlan;
 
 struct mqtt {
-  int i_maxConnectionTrys = 2;
   int i_countTopicsToSubscribe;
   int i_countTopicsToPublish;
 
-  boolean b_retained = false;
   boolean b_isConnected = false;
 
   char** ppc_topicsToSuscribe;
@@ -27,16 +22,11 @@ struct mqtt {
   MQTT_ESP* p_connection;
 } mqtt;
 
-//animation
 Colors* p_color;
 
-struct ledstrip {
-  int i_countLeds;
-  int i_brightness = 250;
-  int i_colormodus = 0;
-
-  Ledstrip* p_physical;
-} stripKeyboard, stripBedWall, stripBedSide;
+Ledstrip* stripKeyboard;
+Ledstrip* stripBedWall;
+Ledstrip* stripBedSide;
 
 Animation* keyboardAnimation;
 Animation* bedWallAnimation;
@@ -45,39 +35,23 @@ Animation* bedSideAnimation;
 void setup() {
   Serial.begin(9600);
 
-  wlan.p_connection = new WlanESP(WLAN_SSID, WLAN_PASSWORD, wlan.i_maxConnectionTrys);
+  wlan.p_connection = new WlanESP(WLAN_SSID, WLAN_PASSWORD, WLAN_MAX_CONNETION_TRYS);
   ota = new OTA_ESP();
-  mqtt.p_connection = new MQTT_ESP(MQTT_SERVER_IP_ADDRESS, MQTT_SERVER_PORT, wlan.p_espClient, mqtt.i_maxConnectionTrys, mqtt.b_retained);
+  mqtt.p_connection = new MQTT_ESP(MQTT_SERVER_IP_ADDRESS, MQTT_SERVER_PORT, wlan.p_espClient, MQTT_MAX_CONNETION_TRYS, MQTT_RETAINED);
 
-  p_color = new Colors(stripKeyboard.i_colormodus);
+  p_color = new Colors(MODUS_RGB);
 
   // keyboard
-  stripKeyboard.i_countLeds = 12;
-  stripKeyboard.p_physical = new Ledstrip(PIN_D4, stripKeyboard.i_countLeds, stripKeyboard.i_brightness, stripKeyboard.i_colormodus);
+  stripKeyboard = new Ledstrip(PIN_D4, KEYBOARD_STRIP_LEDS, BRIGHTNESS, MODUS_RGB);
+  keyboardAnimation = new Animation(stripKeyboard, p_color, KEYBOARD_CONFIG_CRC_STORAGE_INDEX, KEYBOARD_CONFIG_START_STORAGE_INDEX, KEYBOARD_CONFIG_END_STORAGE_INDEX);
 
-  /*keyboard.i_crcStorageIndex = 0;
-  keyboard.i_startStorageIndex = 1;
-  keyboard.i_endStorageIndex = 7;
-  keyboardAnimation = new Animation(stripKeyboard.p_physical, p_color, keyboard.i_crcStorageIndex, keyboard.i_startStorageIndex, keyboard.i_endStorageIndex);
-  */
   //bed-wall
-  stripBedWall.i_countLeds = 60;
-  stripBedWall.p_physical = new Ledstrip(PIN_D3, stripBedWall.i_countLeds, stripBedWall.i_brightness, stripBedWall.i_colormodus);
+  stripBedWall = new Ledstrip(PIN_D3, BED_WALL_STRIP_LEDS, BRIGHTNESS, MODUS_RGB);
+  bedWallAnimation = new Animation(stripBedWall, p_color, BED_WALL_CONFIG_CRC_STORAGE_INDEX, BED_WALL_CONFIG_START_STORAGE_INDEX, BED_WALL_CONFIG_END_STORAGE_INDEX);
 
-  /*bedWall.i_crcStorageIndex = 8;
-  bedWall.i_startStorageIndex = 9;
-  bedWall.i_endStorageIndex = 15;
-  bedWallAnimation = new Animation(stripBedWall.p_physical, p_color, bedWall.i_crcStorageIndex, bedWall.i_startStorageIndex, bedWall.i_endStorageIndex);
-  */
   //bed-side
-  stripBedSide.i_countLeds = 60;
-  stripBedSide.p_physical = new Ledstrip(PIN_D2, stripBedSide.i_countLeds, stripBedSide.i_brightness, stripBedSide.i_colormodus);
-
-  /*bedSide.i_crcStorageIndex = 16;
-  bedSide.i_startStorageIndex = 17;
-  bedSide.i_endStorageIndex = 23;
-  bedSideAnimation = new Animation(stripBedSide.p_physical, p_color, bedSide.i_crcStorageIndex, bedSide.i_startStorageIndex, bedSide.i_endStorageIndex);
-  */
+  stripBedSide = new Ledstrip(PIN_D2, BED_SIDE_STRIP_LEDS, BRIGHTNESS, MODUS_RGB);
+  bedSideAnimation = new Animation(stripBedSide, p_color, BED_SIDE_CONFIG_CRC_STORAGE_INDEX, BED_SIDE_CONFIG_START_STORAGE_INDEX, BED_SIDE_CONFIG_END_STORAGE_INDEX);
 }
 
 void loop() {
