@@ -1,6 +1,7 @@
 #include "MqttCallbackHandler.h"
 
 void MqttCallbackHandler::onMqttPayload(char* pc_topic, u_int8_t* pi_payload, unsigned int i_length) {
+  Serial.println("Hello");
   if(i_length == 0) return;
   pi_payload[i_length] = '\0'; // close the string
 
@@ -8,7 +9,9 @@ void MqttCallbackHandler::onMqttPayload(char* pc_topic, u_int8_t* pi_payload, un
   
   String s_command = s_payload.substring(0, s_payload.indexOf((": ")));
   String s_value = s_command.length() == s_payload.length() ? "" : s_payload.substring(s_command.length());
-
+  Serial.println(s_payload);
+  Serial.println(s_command);
+  Serial.println(s_value);
   handleMqttPayload(
     pc_topic,
     s_command,
@@ -17,8 +20,7 @@ void MqttCallbackHandler::onMqttPayload(char* pc_topic, u_int8_t* pi_payload, un
 }
 
 void MqttCallbackHandler::handleMqttPayload(String s_topic, String s_command, String s_value) {
-  // TODO
-  if(!s_topic.startsWith("conf/")) return;
+  if(!s_topic.startsWith(MQTT_CONF_TOPIC)) return;
 
   if(s_topic.equals(MQTT_GLOBAL_CONF_TOPIC)) {
     if(s_command.equals("list-devices")) {
@@ -37,12 +39,12 @@ void MqttCallbackHandler::handleMqttPayload(String s_topic, String s_command, St
 }
 
 void MqttCallbackHandler::listDevice(Device* p_device) {
-  char* pc_status_topic = (char *) String(MQTT_GLOBAL_STATUS_TOPIC).c_str();
+  char* pc_status_topic = stringToChar(String(MQTT_GLOBAL_STATUS_TOPIC));
   p_mqtt->sendMSG(pc_status_topic, p_device->getData());
 }
 
 void MqttCallbackHandler::handleDeviceConfigurations(Device* p_device, String s_command, String s_value) {
-  char* pc_topicToPublish = p_device->getStatusTopicAsPointer();
+  char* pc_topicToPublish = stringToChar(p_device->getStatusTopic());
   Animation* p_animation = p_device->p_animation;
 
   //Art der Konfigurationsänderung prüfen

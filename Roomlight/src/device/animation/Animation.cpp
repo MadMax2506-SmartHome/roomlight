@@ -10,15 +10,13 @@ void Animation::reloadConf() {
 }
 
 void Animation::readConf() {
-  if(!p_storage->compareCrcs()) {
-    reloadConf();
-  }
+  if(!p_storage->compareCrcs()) reloadConf();
 
-  pi_color      = p_storage->read(p_colorStorage);
-  i_time        = p_storage->read(p_animationTimeStorage);
-  c_type        = p_storage->read(p_animationTypeStorage);
+  pi_color = p_storage->read(p_colorStorage);
+  i_time = p_storage->read(p_animationTimeStorage);
+  c_type = p_storage->read(p_animationTypeStorage);
   c_orientation = p_storage->read(p_orientationStorage);
-  b_status      = p_storage->read(p_statusStorage);
+  b_status = p_storage->read(p_statusStorage);
 
   restart();
 }
@@ -33,6 +31,7 @@ void Animation::writeConf() {
 }
 
 char* Animation::getConfAsJSON() {
+  // TODO
   String str_msg;
   str_msg+= "{";
 

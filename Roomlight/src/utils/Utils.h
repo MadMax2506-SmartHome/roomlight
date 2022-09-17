@@ -1,5 +1,7 @@
-#ifndef _CONSTANTS_H_
-#define _CONSTANTS_H_
+#ifndef _UTILS_H_
+#define _UTILS_H_
+
+#include <Arduino.h>
 
 // general
 #define DEVICE_NAME "roomlight"
@@ -18,4 +20,6 @@
 #define MQTT_STATUS_TOPIC "status"
 #define MQTT_GLOBAL_STATUS_TOPIC String(MQTT_STATUS_TOPIC) + "/devices"
 
-#endif //_CONSTANTS_H_
+char* stringToChar(String);
+
+#endif //_UTILS_H_

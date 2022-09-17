@@ -1,8 +1,9 @@
 #include "./Secrets.h"
-#include "./src/Constants.h"
+#include "./src/utils/Utils.h"
 
 #include "./src/device/Device.h"
 #include "./src/network/Network.h"
+#include "./src/mqttCallbackHandler/MqttCallbackHandler.h"
 
 WlanESP* p_wlan;
 WiFiClient p_espClient;
@@ -14,6 +15,8 @@ Colors* p_color;
 Device* p_keyboardDevice;
 Device* p_bedWallDevice;
 Device* p_bedSideDevice;
+
+MqttCallbackHandler* mqttCallbackHandler;
 
 void setup() {
   Serial.begin(9600);
@@ -27,6 +30,14 @@ void setup() {
   p_keyboardDevice = new Device("deskLightingKeyboard", PIN_D4, 12, 0, 1, 7, p_color);
   p_bedWallDevice = new Device("deskLightingBedWall", PIN_D3, 60, 8, 9, 15, p_color);
   p_bedSideDevice = new Device("deskLightingBedSide", PIN_D2, 60, 16, 17, 23, p_color);
+
+  mqttCallbackHandler = new MqttCallbackHandler(
+    p_mqtt,
+    p_color,
+    p_keyboardDevice,
+    p_bedWallDevice,
+    p_bedSideDevice
+  );
 }
 
 void loop() {
@@ -35,9 +46,14 @@ void loop() {
   p_bedSideDevice->animate();
 
   p_network->init(
-    p_color,
     p_keyboardDevice,
     p_bedWallDevice,
-    p_bedSideDevice
+    p_bedSideDevice,
+    onMqttPayload
   );
+}
+
+void onMqttPayload(char* pc_topic, u_int8_t* pi_payload, unsigned int i_length) {
+  Serial.println("onMqttPayload - Roomlight");
+  mqttCallbackHandler->onMqttPayload(pc_topic, pi_payload, i_length);
 }
