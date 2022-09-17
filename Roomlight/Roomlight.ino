@@ -1,22 +1,8 @@
-#include "./Environment_Variables.h"
-
-#include "src/led_strip/Ledstrip.h"
-#include "src/colors/Colors.h"
-
-#include "src/wlan/WlanESP.h"
-#include "src/refresh_over_the_air/OTA_ESP.h"
-#include "src/mqtt/MQTT_ESP.h"
-
-#include "src/animation/Animation.h"
-
-#define PIN_D4 2
-#define PIN_D3 0
-#define PIN_D2 4
-#define PIN_D1 5
-
-#define COUNT_LIGHTS 3
+#include "./src/Constants.h"
 
 //netwok
+OTA_ESP* ota;
+
 struct wlan {
   int i_maxConnectionTrys = 10;
 
@@ -27,11 +13,7 @@ struct wlan {
   WiFiClient p_espClient;
 } wlan;
 
-OTA_ESP* ota;
-
 struct mqtt {
-  byte* pbyte_ip = new byte[4]{192, 168, 178, 150};
-  int i_port = 1883;
   int i_maxConnectionTrys = 2;
   int i_countTopicsToSubscribe;
   int i_countTopicsToPublish;
@@ -49,35 +31,31 @@ struct mqtt {
 Colors* p_color;
 
 struct ledstrip {
-  int i_pin;
   int i_countLeds;
-  int i_brightness    = 250;
-  int i_colormodus    = 0;
+  int i_brightness = 250;
+  int i_colormodus = 0;
 
   Ledstrip* p_physical;
 } stripKeyboard, stripBedWall, stripBedSide;
 
-struct animation {
-  int i_crcStorageIndex;
-  int i_startStorageIndex;
-  int i_endStorageIndex;
-  Animation* p_animation;
-} keyboard, bedWall, bedSide;
+Animation* keyboardAnimation;
+Animation* bedWallAnimation;
+Animation* bedSideAnimation;
 
 void setup() {
   setupData();
 }
 
 void loop() {
-  bedWall.p_animation->animate();
-  bedSide.p_animation->animate();
-  keyboard.p_animation->animate();
+  bedWallAnimation->animate();
+  bedSideAnimation->animate();
+  keyboardAnimation->animate();
 
   initNetwork();
 }
 
 void setupData() {
-//Serial
+  //Serial
   Serial.begin(9600);
 
   //wlan
@@ -87,41 +65,38 @@ void setupData() {
   ota = new OTA_ESP();
 
   //mqtt
-  mqtt.p_connection = new MQTT_ESP(mqtt.pbyte_ip, mqtt.i_port, wlan.p_espClient, mqtt.i_maxConnectionTrys, mqtt.b_retained);
+  mqtt.p_connection = new MQTT_ESP(MQTT_SERVER_IP_ADDRESS, MQTT_SERVER_PORT, wlan.p_espClient, mqtt.i_maxConnectionTrys, mqtt.b_retained);
 
   //color erstellen
   p_color = new Colors(stripKeyboard.i_colormodus);
 
   // keyboard
-  stripKeyboard.i_pin       = PIN_D4;
   stripKeyboard.i_countLeds = 12;
-  stripKeyboard.p_physical  = new Ledstrip(stripKeyboard.i_pin, stripKeyboard.i_countLeds, stripKeyboard.i_brightness, stripKeyboard.i_colormodus);
+  stripKeyboard.p_physical = new Ledstrip(PIN_D4, stripKeyboard.i_countLeds, stripKeyboard.i_brightness, stripKeyboard.i_colormodus);
 
-  keyboard.i_crcStorageIndex    = 0;
-  keyboard.i_startStorageIndex  = 1;
-  keyboard.i_endStorageIndex    = 7;
-  keyboard.p_animation          = new Animation(stripKeyboard.p_physical, p_color, keyboard.i_crcStorageIndex, keyboard.i_startStorageIndex, keyboard.i_endStorageIndex);
-
+  /*keyboard.i_crcStorageIndex = 0;
+  keyboard.i_startStorageIndex = 1;
+  keyboard.i_endStorageIndex = 7;
+  keyboardAnimation = new Animation(stripKeyboard.p_physical, p_color, keyboard.i_crcStorageIndex, keyboard.i_startStorageIndex, keyboard.i_endStorageIndex);
+  */
   //bed-wall
-  stripBedWall.i_pin       = PIN_D3;
   stripBedWall.i_countLeds = 60;
-  stripBedWall.p_physical  = new Ledstrip(stripBedWall.i_pin, stripBedWall.i_countLeds, stripBedWall.i_brightness, stripBedWall.i_colormodus);
+  stripBedWall.p_physical = new Ledstrip(PIN_D3, stripBedWall.i_countLeds, stripBedWall.i_brightness, stripBedWall.i_colormodus);
 
-
-  bedWall.i_crcStorageIndex   = 8;
+  /*bedWall.i_crcStorageIndex = 8;
   bedWall.i_startStorageIndex = 9;
-  bedWall.i_endStorageIndex   = 15;
-  bedWall.p_animation         = new Animation(stripBedWall.p_physical, p_color, bedWall.i_crcStorageIndex, bedWall.i_startStorageIndex, bedWall.i_endStorageIndex);
-
+  bedWall.i_endStorageIndex = 15;
+  bedWallAnimation = new Animation(stripBedWall.p_physical, p_color, bedWall.i_crcStorageIndex, bedWall.i_startStorageIndex, bedWall.i_endStorageIndex);
+  */
   //bed-side
-  stripBedSide.i_pin        = PIN_D2;
-  stripBedSide.i_countLeds  = 60;
-  stripBedSide.p_physical   = new Ledstrip(stripBedSide.i_pin, stripBedSide.i_countLeds, stripBedSide.i_brightness, stripBedSide.i_colormodus);
+  stripBedSide.i_countLeds = 60;
+  stripBedSide.p_physical = new Ledstrip(PIN_D2, stripBedSide.i_countLeds, stripBedSide.i_brightness, stripBedSide.i_colormodus);
 
-  bedSide.i_crcStorageIndex   = 16;
+  /*bedSide.i_crcStorageIndex = 16;
   bedSide.i_startStorageIndex = 17;
-  bedSide.i_endStorageIndex   = 23;
-  bedSide.p_animation         = new Animation(stripBedSide.p_physical, p_color, bedSide.i_crcStorageIndex, bedSide.i_startStorageIndex, bedSide.i_endStorageIndex);
+  bedSide.i_endStorageIndex = 23;
+  bedSideAnimation = new Animation(stripBedSide.p_physical, p_color, bedSide.i_crcStorageIndex, bedSide.i_startStorageIndex, bedSide.i_endStorageIndex);
+  */
 }
 
 void initNetwork() {
@@ -167,8 +142,8 @@ void initWLAN() {
 
   //mqtt
   //subscribs initalisieren
-  mqtt.i_countTopicsToSubscribe  = 6;
-  mqtt.ppc_topicsToSuscribe      = new char*[mqtt.i_countTopicsToSubscribe];
+  mqtt.i_countTopicsToSubscribe = 6;
+  mqtt.ppc_topicsToSuscribe = new char*[mqtt.i_countTopicsToSubscribe];
 
   mqtt.ppc_topicsToSuscribe[0] = "devices";
 
@@ -235,7 +210,7 @@ void initMQTT() {
   mqtt.p_connection->sendMSG(mqtt.ppc_topicsToPublish[0], "power-on");
 
   //prüfen, ob der zustand des keyboardstrips aktiv ist
-  if(keyboard.p_animation->getStatus()) {
+  if(keyboardAnimation->getStatus()) {
      //Strip ist aktiv
      mqtt.p_connection->sendMSG(mqtt.ppc_topicsToPublish[1], "active");
   } else {
@@ -244,7 +219,7 @@ void initMQTT() {
   }
 
   //prüfen, ob der zustand des bedwall strips aktiv ist
-  if(bedWall.p_animation->getStatus()) {
+  if(bedWallAnimation->getStatus()) {
     //Strip ist aktiv
     mqtt.p_connection->sendMSG(mqtt.ppc_topicsToPublish[3], "active");
   } else {
@@ -253,7 +228,7 @@ void initMQTT() {
   }
 
    //prüfen, ob der zustand des bedside strips aktiv ist
-  if(bedSide.p_animation->getStatus()) {
+  if(bedSideAnimation->getStatus()) {
     //Strip ist aktiv
     mqtt.p_connection->sendMSG(mqtt.ppc_topicsToPublish[4], "active");
   } else {
@@ -267,15 +242,15 @@ char** getConfAsJSON() {
   String str_json;
   char** ppc_json = new char*[COUNT_LIGHTS];
 
-  str_json    = "{\"keyboard\":" + String(keyboard.p_animation->getConfAsJSON()) + "}";
+  str_json    = "{\"keyboard\":" + String(keyboardAnimation->getConfAsJSON()) + "}";
   ppc_json[0] = new char[255];
   str_json.toCharArray(ppc_json[0], 255);
 
-  str_json    = "{\"bed-wall\":" + String(bedWall.p_animation->getConfAsJSON()) + "}";
+  str_json    = "{\"bed-wall\":" + String(bedWallAnimation->getConfAsJSON()) + "}";
   ppc_json[1] = new char[255];
   str_json.toCharArray(ppc_json[1], 255);
 
-  str_json    = "{\"bed-side\":" + String(bedSide.p_animation->getConfAsJSON()) + "}";
+  str_json    = "{\"bed-side\":" + String(bedSideAnimation->getConfAsJSON()) + "}";
   ppc_json[2] = new char[255];
   str_json.toCharArray(ppc_json[2], 255);
 
@@ -348,17 +323,17 @@ void callback(char* topic, byte* payload, unsigned int length) {
       // keyboard
 
       pc_topicToPublish  = mqtt.ppc_topicsToPublish[1];
-      p_animation       = keyboard.p_animation;
+      p_animation       = keyboardAnimation;
     } else if(strcmp(topic, mqtt.ppc_topicsToSuscribe[4]) == 0){
       // bedWall
 
       pc_topicToPublish = mqtt.ppc_topicsToPublish[3];
-      p_animation       = bedWall.p_animation;
+      p_animation       = bedWallAnimation;
     } else {
       // bedSide
 
       pc_topicToPublish = mqtt.ppc_topicsToPublish[4];
-      p_animation       = bedSide.p_animation;
+      p_animation       = bedSideAnimation;
     }
 
     char* pc_commandContent = strtok(NULL, " ");
