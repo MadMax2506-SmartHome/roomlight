@@ -2,15 +2,13 @@
 #define _MQTT_ESP_H_
 
 #include <Arduino.h>
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
 
-#include "../../mqttCallbackHandler/MqttCallbackHandler.h"
+#include <stdio.h>
+#include <time.h>
+#include <stdlib.h>
+#include <string.h>
 
 class MQTT_ESP {
 private:
@@ -48,8 +46,8 @@ public:
 
   void setRetained(boolean);
 
-  boolean connect(MqttCallbackHandler *);
-  boolean connect(char**, int,  MqttCallbackHandler *);
+  boolean connect(MQTT_CALLBACK_SIGNATURE);
+  boolean connect(char**, int,  MQTT_CALLBACK_SIGNATURE);
   boolean reconnect();
 
   void loop();

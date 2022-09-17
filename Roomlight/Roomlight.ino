@@ -1,4 +1,11 @@
+#include "./Secrets.h"
 #include "./src/Constants.h"
+
+#include "./src/led_strip/Ledstrip.h"
+#include "./src/colors/Colors.h"
+#include "./src/animation/Animation.h"
+#include "./src/network/Network.h"
+#include "./src/mqttCallbackHandler/MqttCallbackHandler.h"
 
 boolean b_isWlanConnected;
 boolean b_isMqttConnected;
@@ -7,8 +14,6 @@ WlanESP* p_wlan;
 WiFiClient p_espClient;
 OTA_ESP* p_ota;
 MQTT_ESP* p_mqtt;
-
-MqttCallbackHandler* mqttCallbackHandler;
 
 Colors* p_color;
 Ledstrip* p_stripKeyboard;
@@ -28,14 +33,6 @@ void setup() {
     MQTT_SERVER_IP_ADDRESS,
     MQTT_SERVER_PORT,
     p_espClient
-  );
-
-  mqttCallbackHandler = new MqttCallbackHandler(
-    p_mqtt,
-    p_color,
-    p_keyboardAnimation,
-    p_bedWallAnimation,
-    p_bedSideAnimation
   );
   
   p_color = new Colors(MODUS_RGB);
@@ -102,7 +99,22 @@ void initWLAN() {
 }
 
 void initMQTT() {
-  b_isMqttConnected = p_mqtt->connect(ppc_topicsToSuscribe, MQTT_COUNT_TOPICS_TO_SUBSCRIBE, mqttCallbackHandler);
+  MqttCallbackHandler* mqttCallbackHandler = new MqttCallbackHandler(
+    p_mqtt,
+    p_color,
+    p_keyboardAnimation,
+    p_bedWallAnimation,
+    p_bedSideAnimation
+  );
+
+  char** ppc_topicsToSuscribe = new char*[2];
+  b_isMqttConnected = p_mqtt->connect(
+    ppc_topicsToSuscribe,
+    MQTT_COUNT_TOPICS_TO_SUBSCRIBE,  
+    [mqttCallbackHandler](char* pc_topic, u_int8_t* pi_payload, unsigned int i_length){
+      return mqttCallbackHandler->onMqttPayload(pc_topic, pi_payload, i_length);
+    }
+  );
   if(!b_isMqttConnected) return;
   p_mqtt->loop();
 

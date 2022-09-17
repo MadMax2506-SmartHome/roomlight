@@ -4,6 +4,8 @@
 #include <Arduino.h>
 
 #include "../Constants.h"
+#include "../network/Network.h"
+#include "../animation/Animation.h"
 
 class MqttCallbackHandler {
 private:

@@ -1,15 +1,6 @@
 #ifndef _CONSTANTS_H_
 #define _CONSTANTS_H_
 
-// includes
-#include "../Secrets.h"
-
-#include "./led_strip/Ledstrip.h"
-#include "./colors/Colors.h"
-#include "./animation/Animation.h"
-#include "./network/Network.h"
-#include "./mqttCallbackHandler/MqttCallbackHandler.h"
-
 // general
 #define DEVICE_NAME "roomlight"
 
