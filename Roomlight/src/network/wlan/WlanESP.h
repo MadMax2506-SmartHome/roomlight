@@ -24,6 +24,7 @@ public:
   }
 
   boolean connect();
+  boolean isConnected();
 
   char* getMac();
   char* getIp();

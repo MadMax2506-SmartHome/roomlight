@@ -2,13 +2,13 @@
 #define _MQTT_ESP_H_
 
 #include <Arduino.h>
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
+
+#include <stdio.h>
+#include <time.h>
+#include <stdlib.h>
+#include <string.h>
 
 class MQTT_ESP {
 private:
@@ -26,25 +26,28 @@ private:
   WiFiClient p_espClient;
   PubSubClient* p_client;
 public:
-  MQTT_ESP(byte* pbyte_ip, int i_port, WiFiClient p_espClient, int i_maxConnectionTrys = 2, boolean b_retained = false) :
-  pbyte_ip(pbyte_ip),
+  MQTT_ESP(
+    byte* pbyte_ip,
+    int i_port,
+    WiFiClient p_espClient,
+    int i_maxConnectionTrys = 2,
+    boolean b_retained = false
+  ) :
   i_port(i_port),
-  p_espClient(p_espClient),
+  i_countTopicsToSubscribe(0),
   i_maxConnectionTrys(i_maxConnectionTrys),
-  b_retained(b_retained)
-  {
-    b_isMqttInit      = false;
-    b_isMqttAvailable = false;
-
-    i_countTopicsToSubscribe  = 0;
-    ppc_topicsToSubscribe     = NULL;
-  }
+  b_retained(b_retained),
+  b_isMqttInit(false),
+  b_isMqttAvailable(false),
+  ppc_topicsToSubscribe(NULL),
+  pbyte_ip(pbyte_ip),
+  p_espClient(p_espClient)
+  {}
 
   void setRetained(boolean);
 
-  boolean connect(void callback(char*, byte*, unsigned int));
-  boolean connect(char**, int, void callback(char*, byte*, unsigned int));
-
+  boolean connect(MQTT_CALLBACK_SIGNATURE);
+  boolean connect(char**, int,  MQTT_CALLBACK_SIGNATURE);
   boolean reconnect();
 
   void loop();
