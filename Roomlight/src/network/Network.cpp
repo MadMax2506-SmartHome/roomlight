@@ -12,9 +12,23 @@ void Network::init(
   initMQTT(p_keyboardDevice, p_bedWallDevice, p_bedSideDevice, callback);
 }
 
-void Network::loop() {
-  p_ota->handle();
-  p_mqtt->loop();
+void Network::loop(
+  Device* p_keyboardDevice,
+  Device* p_bedWallDevice,
+  Device* p_bedSideDevice,
+  void callback(char*, u_int8_t*, unsigned int)
+) {
+  if(p_wlan->isConnected()) {
+    p_ota->handle();
+
+    if(p_mqtt->isConnected()) { 
+      p_mqtt->loop();
+    } else {
+      initMQTT(p_keyboardDevice, p_bedWallDevice, p_bedSideDevice, callback);
+    }
+  } else {
+    init(p_keyboardDevice, p_bedWallDevice, p_bedSideDevice, callback);
+  }
 }
 
 void Network::initMQTT(

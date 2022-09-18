@@ -8,7 +8,6 @@
 class WlanESP {
 private:
   int i_maxTrys;
-  boolean b_isAvailable;
 
   char* pc_ssid;
   char* pc_password;

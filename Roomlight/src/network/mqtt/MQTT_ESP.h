@@ -18,7 +18,6 @@ private:
 
   boolean b_retained;
   boolean b_isMqttInit;
-  boolean b_isMqttAvailable;
 
   char** ppc_topicsToSubscribe;
   byte* pbyte_ip;
@@ -38,7 +37,6 @@ public:
   i_maxConnectionTrys(i_maxConnectionTrys),
   b_retained(b_retained),
   b_isMqttInit(false),
-  b_isMqttAvailable(false),
   ppc_topicsToSubscribe(NULL),
   pbyte_ip(pbyte_ip),
   p_espClient(p_espClient)
@@ -49,6 +47,8 @@ public:
   boolean connect(MQTT_CALLBACK_SIGNATURE);
   boolean connect(char**, int,  MQTT_CALLBACK_SIGNATURE);
   boolean reconnect();
+
+  boolean isConnected();
 
   void loop();
 

@@ -7,7 +7,7 @@ void MqttCallbackHandler::onMqttPayload(char* pc_topic, u_int8_t* pi_payload, un
   String s_payload = String((char*) pi_payload);
   
   String s_command = s_payload.substring(0, s_payload.indexOf((": ")));
-  String s_value = s_command.length() == s_payload.length() ? "" : s_payload.substring(s_command.length());
+  String s_value = s_command.length() == s_payload.indexOf((": ")) + 1 ? "" : s_payload.substring(s_command.length());
 
   handleMqttPayload(
     pc_topic,
