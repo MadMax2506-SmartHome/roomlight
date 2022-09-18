@@ -6,25 +6,15 @@ void Network::init(
   Device* p_bedSideDevice,
   void callback(char*, u_int8_t*, unsigned int)
 ) {
-  //prüfen, ob WLAN verbunden ist
-  if(b_isWlanConnected) {
-    //WLAN verbunden
-    p_ota->handle();
+  if(!p_wlan->connect()) return;
+  p_ota->init(p_wlan->getMac(), "madmax");
 
-    if(b_isMqttConnected) p_mqtt->loop();
-    else initMQTT(p_keyboardDevice, p_bedWallDevice, p_bedSideDevice, callback);
-  } else {
-    //WLAN nicht verbunden
-    initWLAN();
-
-    if(!b_isWlanConnected) return;
-    initMQTT(p_keyboardDevice, p_bedWallDevice, p_bedSideDevice, callback);
-  }
+  initMQTT(p_keyboardDevice, p_bedWallDevice, p_bedSideDevice, callback);
 }
 
-void Network::initWLAN() {
-  if(!(b_isWlanConnected = p_wlan->connect())) return;
-  p_ota->init(p_wlan->getMac(), OTA_PASSWORD);
+void Network::loop() {
+  p_ota->handle();
+  p_mqtt->loop();
 }
 
 void Network::initMQTT(
@@ -40,7 +30,7 @@ void Network::initMQTT(
   ppc_topicsToSuscribe[2] = stringToChar(p_bedWallDevice->getConfigTopic());
   ppc_topicsToSuscribe[3] = stringToChar(p_bedSideDevice->getConfigTopic());
 
-  if(!(b_isMqttConnected = p_mqtt->connect(ppc_topicsToSuscribe, i_numberOfTopicsToSuscribe, callback))) return;
+  if(p_mqtt->connect(ppc_topicsToSuscribe, i_numberOfTopicsToSuscribe, callback)) return;
   p_mqtt->loop();
 
   initSingleMqttDevice(p_keyboardDevice);

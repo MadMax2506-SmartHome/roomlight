@@ -37,6 +37,8 @@ boolean WlanESP::connect() {
   return b_isAvailable;
 }
 
+boolean WlanESP::isConnected() { return WiFi.isConnected(); }
+
 //Getter-Methoden
 char* WlanESP::getMac() {
   char* pc_mac = new char[20];

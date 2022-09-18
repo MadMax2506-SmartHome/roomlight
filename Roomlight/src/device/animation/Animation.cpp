@@ -31,7 +31,6 @@ void Animation::writeConf() {
 }
 
 char* Animation::getConfAsJSON() {
-  // TODO
   String str_msg;
   str_msg+= "{";
 

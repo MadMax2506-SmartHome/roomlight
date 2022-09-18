@@ -38,12 +38,6 @@ void setup() {
     p_bedWallDevice,
     p_bedSideDevice
   );
-}
-
-void loop() {
-  p_keyboardDevice->animate();
-  p_bedWallDevice->animate();
-  p_bedSideDevice->animate();
 
   p_network->init(
     p_keyboardDevice,
@@ -53,7 +47,14 @@ void loop() {
   );
 }
 
+void loop() {
+  p_keyboardDevice->animate();
+  p_bedWallDevice->animate();
+  p_bedSideDevice->animate();
+  
+  p_network->loop();
+}
+
 void onMqttPayload(char* pc_topic, u_int8_t* pi_payload, unsigned int i_length) {
-  Serial.println("onMqttPayload - Roomlight");
   mqttCallbackHandler->onMqttPayload(pc_topic, pi_payload, i_length);
 }

@@ -31,8 +31,7 @@ boolean MQTT_ESP::connect(char** ppc_topicsToSubscribe, int i_countTopicsToSubsc
 
 boolean MQTT_ESP::reconnect() {
   //prüfen, ob mqtt initalisieren ist und keine Verbindung besteht
-  if(b_isMqttInit
-    && !p_client->connected()) {
+  if(b_isMqttInit && !p_client->connected()) {
     //debug print
     Serial.println("\n\n--------------------------------------------------");
     Serial.print("Wait for MQTT-Server...");
@@ -42,8 +41,6 @@ boolean MQTT_ESP::reconnect() {
     while (!p_client->connected()) {
       //prüfen, ob Anzahl, der Versuche zur Verbindungsaufname, der maximalen Anzahl Versuche zur Verbindungsaufname entspricht
       if(i_connectionTrys == i_maxConnectionTrys) {
-        b_isMqttAvailable = false;
-
         //debug print
         Serial.println();
         Serial.println("\nMQTT-Brocker is not available");
@@ -109,7 +106,7 @@ boolean MQTT_ESP::reconnect() {
   }
 
   //client wiederholt starten
-  loop();
+  //loop();
   return b_isMqttAvailable;
 }
 
@@ -125,9 +122,7 @@ void MQTT_ESP::loop() {
 
 boolean MQTT_ESP::sendMSG(char* pc_topic, char* pc_msg) {
   //prüfen, ob mqtt nicht initalisiert wurde
-  if(!b_isMqttInit) {
-    return false;
-  }
+  if(!b_isMqttInit) return false;
 
   //erneut verbinden
   reconnect();

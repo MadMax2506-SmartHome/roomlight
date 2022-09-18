@@ -1,22 +1,19 @@
 #include "MqttCallbackHandler.h"
 
 void MqttCallbackHandler::onMqttPayload(char* pc_topic, u_int8_t* pi_payload, unsigned int i_length) {
-  Serial.println("Hello");
   if(i_length == 0) return;
   pi_payload[i_length] = '\0'; // close the string
 
-  String s_payload = (char*) pi_payload;
+  String s_payload = String((char*) pi_payload);
   
   String s_command = s_payload.substring(0, s_payload.indexOf((": ")));
   String s_value = s_command.length() == s_payload.length() ? "" : s_payload.substring(s_command.length());
-  Serial.println(s_payload);
-  Serial.println(s_command);
-  Serial.println(s_value);
+
   handleMqttPayload(
     pc_topic,
     s_command,
     s_value
-  );  
+  );
 }
 
 void MqttCallbackHandler::handleMqttPayload(String s_topic, String s_command, String s_value) {
@@ -59,17 +56,22 @@ void MqttCallbackHandler::handleDeviceConfigurations(Device* p_device, String s_
       s_value.substring(i_indexSecondDelimiter + 1).toInt() // blue
     );
     p_animation->setColor(color);
+    p_mqtt->sendMSG(pc_topicToPublish, p_device->getConfiguration());
   } else if(s_command.equals("orientation")) {
     //Richtung der Animation
     p_animation->setOrientation(s_value.charAt(0));
+    p_mqtt->sendMSG(pc_topicToPublish, p_device->getConfiguration());
   } else if(s_command.equals("animation-typ")) {
     //Art der Animation
     if(s_value.equals("fade")) p_animation->setType('f');
     else if(s_value.equals("rainbow")) p_animation->setType('r');
     else p_animation->setType('t');
+
+    p_mqtt->sendMSG(pc_topicToPublish, p_device->getConfiguration());
   } else if(s_value.equals("animation-time")) {
     //Zeit der Animation von jeder LED
     p_animation->setTime(s_value.toInt());
+    p_mqtt->sendMSG(pc_topicToPublish, p_device->getConfiguration());
   } else if(s_command.equals("restart-animation")) {
     //Animation neuladen
     p_animation->restart();
@@ -77,13 +79,13 @@ void MqttCallbackHandler::handleDeviceConfigurations(Device* p_device, String s_
     //Strip einschalten
     if(!p_animation->getStatus()) {
       p_animation->setStatus(true);
-      p_mqtt->sendMSG(pc_topicToPublish, "active");
+      p_mqtt->sendMSG(pc_topicToPublish, p_device->getConfiguration());
     }
   } else if(s_command.equals("idle")) {
     //Strip ausschalten
     if(p_animation->getStatus()) {
       p_animation->setStatus(false);
-      p_mqtt->sendMSG(pc_topicToPublish, "idle");
+      p_mqtt->sendMSG(pc_topicToPublish, p_device->getConfiguration());
     }
   } else if(s_command.equals("reload-conf")) {
     //Konfiguration zurücksetzen
@@ -92,8 +94,8 @@ void MqttCallbackHandler::handleDeviceConfigurations(Device* p_device, String s_
   } else if(s_command.equals("save-conf")) {
     //Konfiguration speichern
     p_animation->writeConf();
-  }else if(s_command.equals("get-conf")) {
+  } else if(s_command.equals("get-conf")) {
     //Konfiguration ausgeben
-      p_mqtt->sendMSG(pc_topicToPublish, p_device->getConfiguration());
+    p_mqtt->sendMSG(pc_topicToPublish, p_device->getConfiguration());
   }
 }

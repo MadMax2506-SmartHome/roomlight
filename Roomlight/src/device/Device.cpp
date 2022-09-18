@@ -11,28 +11,24 @@ String Device::getConfigTopic() {
 
 char* Device::getInfo() {
   String str_json;
-  DynamicJsonDocument configJSON(1024);
+  str_json+= "{";
+  str_json+= "\"deviceId\": \"" + id + "\",";
+  str_json+= "\"name\": \"" + String(DEVICE_NAME) + "\"";
+  str_json+= "}";
 
-  configJSON["deviceId"] = id;
-  configJSON["name"] = DEVICE_NAME;
-  serializeJson(configJSON, str_json);
-
-  Serial.println(stringToChar(str_json));
   return stringToChar(str_json);
 }
 
 char* Device::getConfiguration() {
-  Serial.println(p_animation->getConfAsJSON());
   return p_animation->getConfAsJSON();
 }
 
 char* Device::getData() {
   String str_json;
-  DynamicJsonDocument configJSON(1024);
+  str_json+= "{";
+  str_json+= "\"info\": " + String(getInfo()) + ",";
+  str_json+= "\"config\": " + String(getConfiguration());
+  str_json+= "}";
 
-  configJSON["info"] = getData();
-  configJSON["config"] = getConfiguration();
-
-  Serial.println(stringToChar(str_json));
   return stringToChar(str_json);
 }

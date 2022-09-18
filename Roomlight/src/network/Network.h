@@ -14,26 +14,21 @@
 
 class Network {
 private:
-  boolean b_isWlanConnected;
-  boolean b_isMqttConnected;
-
   WlanESP* p_wlan;
   OTA_ESP* p_ota;
   MQTT_ESP* p_mqtt;
 
-  void initWLAN();
   void initMQTT(Device*, Device*, Device*, void (char*, u_int8_t*, unsigned int));
   void initSingleMqttDevice(Device*);
 public:
   Network(WlanESP* p_wlan, OTA_ESP* p_ota, MQTT_ESP* p_mqtt) :
-  b_isWlanConnected(false),
-  b_isMqttConnected(false),
   p_wlan(p_wlan),
   p_ota(p_ota),
   p_mqtt(p_mqtt)
   {};
 
   void init(Device*, Device*, Device*, void (char*, u_int8_t*, unsigned int));
+  void loop();
 };
 
 #endif //_NETWORK_H_

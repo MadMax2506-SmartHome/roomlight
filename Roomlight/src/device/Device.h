@@ -2,7 +2,6 @@
 #define _DEVICE_H_
 
 #include <Arduino.h>
-#include <ArduinoJson.h>
 
 #include "../../Secrets.h"
 #include "../utils/Utils.h"
