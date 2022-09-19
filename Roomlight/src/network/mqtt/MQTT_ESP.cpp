@@ -5,33 +5,25 @@ void MQTT_ESP::setRetained(boolean b_retained) {
 }
 
 boolean MQTT_ESP::connect(MQTT_CALLBACK_SIGNATURE) {
-  //neuer client
   p_client = new PubSubClient(p_espClient);
-
-  //Server und port setzen
   p_client->setServer(pbyte_ip, i_port);
-
-  //callback function setzen
   p_client->setCallback(callback);
  
-  //initalisieren
   b_isMqttInit = true;
 
   return reconnect();
 }
 
 boolean MQTT_ESP::connect(char** ppc_topicsToSubscribe, int i_countTopicsToSubscribe, MQTT_CALLBACK_SIGNATURE) {
-  //topics zum subscriben und  anzahl, der topics zum subscriben setzen
   MQTT_ESP::ppc_topicsToSubscribe = ppc_topicsToSubscribe;
   MQTT_ESP::i_countTopicsToSubscribe = i_countTopicsToSubscribe;
 
-  //verbindung initalisieren
   return connect(callback);
 }
 
 boolean MQTT_ESP::reconnect() {
   //prüfen, ob mqtt initalisieren ist und keine Verbindung besteht
-  if(b_isMqttInit && !p_client->connected()) {
+  if(b_isMqttInit && !isConnected()) {
     //debug print
     Serial.println("\n\n--------------------------------------------------");
     Serial.print("Wait for MQTT-Server...");
@@ -55,8 +47,6 @@ boolean MQTT_ESP::reconnect() {
       sprintf(client, "esp32_%d",number);
 
       if(p_client->connect( client )) {
-        b_isMqttAvailable = true;
-
         //debug print
         Serial.println();
         Serial.println("MQTT-Brocker is available");
@@ -105,31 +95,24 @@ boolean MQTT_ESP::reconnect() {
     Serial.println("--------------------------------------------------\n");
   }
 
-  //client wiederholt starten
-  //loop();
-  return b_isMqttAvailable;
+  loop();
+  return isConnected();
 }
 
-void MQTT_ESP::loop() {
-  //prüfen, ob mqtt nicht initalisiert wurde
-  if(!b_isMqttInit) {
-    return;
-  }
+boolean MQTT_ESP::isConnected() { return b_isMqttInit && p_client->connected(); }
 
-  //client wiederholt starten
+void MQTT_ESP::loop() {
+  if(!b_isMqttInit) return;
   p_client->loop();
 }
 
 boolean MQTT_ESP::sendMSG(char* pc_topic, char* pc_msg) {
-  //prüfen, ob mqtt nicht initalisiert wurde
   if(!b_isMqttInit) return false;
-
-  //erneut verbinden
   reconnect();
 
   //publish
   boolean b_result = false;
-  if(b_isMqttAvailable) {
+  if(isConnected()) {
     //prüfen, ob kurze Nachricht
     int i_length = strlen(pc_msg);
 

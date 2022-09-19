@@ -18,6 +18,7 @@ private:
   OTA_ESP* p_ota;
   MQTT_ESP* p_mqtt;
 
+  void init(Device*, Device*, Device*, void (char*, u_int8_t*, unsigned int));
   void initMQTT(Device*, Device*, Device*, void (char*, u_int8_t*, unsigned int));
   void initSingleMqttDevice(Device*);
 public:
@@ -27,8 +28,7 @@ public:
   p_mqtt(p_mqtt)
   {};
 
-  void init(Device*, Device*, Device*, void (char*, u_int8_t*, unsigned int));
-  void loop();
+  void loop(Device*, Device*, Device*, void (char*, u_int8_t*, unsigned int));
 };
 
 #endif //_NETWORK_H_

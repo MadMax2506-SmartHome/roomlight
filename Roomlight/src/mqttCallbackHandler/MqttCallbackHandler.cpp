@@ -5,9 +5,13 @@ void MqttCallbackHandler::onMqttPayload(char* pc_topic, u_int8_t* pi_payload, un
   pi_payload[i_length] = '\0'; // close the string
 
   String s_payload = String((char*) pi_payload);
+  s_payload.trim();
   
   String s_command = s_payload.substring(0, s_payload.indexOf((": ")));
-  String s_value = s_command.length() == s_payload.length() ? "" : s_payload.substring(s_command.length());
+  s_command.trim();
+
+  String s_value = s_command.length() == s_payload.length() ? "" : s_payload.substring(s_payload.indexOf((": ")) + 1);
+  s_value.trim();
 
   handleMqttPayload(
     pc_topic,
@@ -50,6 +54,10 @@ void MqttCallbackHandler::handleDeviceConfigurations(Device* p_device, String s_
     int i_indexFirstDelimiter = s_value.indexOf(";");
     int i_indexSecondDelimiter = s_value.lastIndexOf(";");
 
+    p_mqtt->sendMSG(pc_topicToPublish, stringToChar(s_value.substring(0, i_indexFirstDelimiter)));
+    p_mqtt->sendMSG(pc_topicToPublish, stringToChar(s_value.substring(i_indexFirstDelimiter + 1, i_indexSecondDelimiter)));
+    p_mqtt->sendMSG(pc_topicToPublish, stringToChar(s_value.substring(i_indexSecondDelimiter + 1)));
+
     int* color = p_color->getMix(
       s_value.substring(0, i_indexFirstDelimiter).toInt(), // red
       s_value.substring(i_indexFirstDelimiter + 1, i_indexSecondDelimiter).toInt(), // green
@@ -68,9 +76,13 @@ void MqttCallbackHandler::handleDeviceConfigurations(Device* p_device, String s_
     else p_animation->setType('t');
 
     p_mqtt->sendMSG(pc_topicToPublish, p_device->getConfiguration());
-  } else if(s_value.equals("animation-time")) {
+  } else if(s_command.equals("animation-time")) {
     //Zeit der Animation von jeder LED
     p_animation->setTime(s_value.toInt());
+    p_mqtt->sendMSG(pc_topicToPublish, p_device->getConfiguration());
+  } else if(s_command.equals("brightness")) {
+    //Helligkeit der LEDs
+    p_animation->setBrightness(s_value.toInt());
     p_mqtt->sendMSG(pc_topicToPublish, p_device->getConfiguration());
   } else if(s_command.equals("restart-animation")) {
     //Animation neuladen

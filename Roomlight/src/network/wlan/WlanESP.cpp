@@ -11,12 +11,9 @@ boolean WlanESP::connect() {
 
   //versucht eine Verbindung aufzubauen (maximal: i_maxTrys)
   int i_trys = 0;
-  b_isAvailable = true;
   while (p_WiFiMulti.run() != WL_CONNECTED) {
-    if(i_trys == i_maxTrys) {
-      b_isAvailable = false;
-      break;
-    }
+    if(i_trys == i_maxTrys) break;
+    
     Serial.print(".");
     delay(500);
     i_trys++;
@@ -24,7 +21,7 @@ boolean WlanESP::connect() {
 
   //print debugs
   Serial.println("\n");
-  if(b_isAvailable) {
+  if(isConnected()) {
     Serial.println("WiFi is available");
     Serial.print("ip-address: ");
     Serial.println(WiFi.localIP());
@@ -34,7 +31,7 @@ boolean WlanESP::connect() {
     Serial.println("WiFi is  not available");
   }
   Serial.println("--------------------------------------------------\n");
-  return b_isAvailable;
+  return isConnected();
 }
 
 boolean WlanESP::isConnected() { return WiFi.isConnected(); }
