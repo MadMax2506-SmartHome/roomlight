@@ -1,15 +1,28 @@
 #include "Ledstrip.h"
 
 uint32_t Ledstrip::getColorFromColorCode(int* pi_colorCode) {
+  return getColorFromColorCode(pi_colorCode, i_brightness);
+}
+
+uint32_t Ledstrip::getColorFromColorCode(int* pi_colorCode, int i_brightness) {
+  double d_brightnessPercent = i_brightness / 255.0;
+
   //prüfen, ob rgb ledstrip
   if(i_colorModus == MODUS_RGB) {
     //rgb ledstrip
-
-    return p_strip->Color(pi_colorCode[0], pi_colorCode[1], pi_colorCode[2]);
+    return p_strip->Color(
+      pi_colorCode[0] * d_brightnessPercent,
+      pi_colorCode[1] * d_brightnessPercent,
+      pi_colorCode[2] * d_brightnessPercent
+    );
   } else {
     //rgbw ledstrip
-
-    return p_strip->Color(pi_colorCode[0], pi_colorCode[1], pi_colorCode[2], pi_colorCode[3]);
+    return p_strip->Color(
+      pi_colorCode[0] * d_brightnessPercent,
+      pi_colorCode[1] * d_brightnessPercent,
+      pi_colorCode[2] * d_brightnessPercent,
+      pi_colorCode[3] * d_brightnessPercent
+    );
   }
 }
 
@@ -200,34 +213,25 @@ void Ledstrip::multiFade(int** ppi_colorCode, int i_countColors, char c_orientat
   }
 }
 
-void Ledstrip::dimmen(int i_newBrightness, int i_waitAfterEachLed) {
+void Ledstrip::dimmen(int i_newBrightness, int* pi_colorCode, int i_waitAfterEachLed) {
   int i_oldBrightness = p_strip->getBrightness();
   
   if(i_oldBrightness < i_newBrightness) {
     // Heller werden
     for(int i = i_oldBrightness; i < i_newBrightness; i++) {
-      dimmenToValue(i, i_waitAfterEachLed);
+      dimmenToValue(i, pi_colorCode, i_waitAfterEachLed);
     }
   } else if (i_oldBrightness > i_newBrightness) {
     // Dunkler werden
     for(int i = i_oldBrightness; i > i_newBrightness; i--) {
-      dimmenToValue(i, i_waitAfterEachLed);
+      dimmenToValue(i, pi_colorCode, i_waitAfterEachLed);
     }
   }
 }
 
-void Ledstrip::dimmenToValue(int value, int i_waitAfterEachLed) {
-  //prüfen, ob rgb ledstrip
-  if(i_colorModus == MODUS_RGB) {
-    //rgb ledstrip
-    p_strip->fill(p_strip->Color(p_strip->gamma8(value), p_strip->gamma8(value), p_strip->gamma8(value)));
-  } else {
-    //rgbw ledstrip
-    p_strip->fill(p_strip->Color(p_strip->gamma8(value), p_strip->gamma8(value), p_strip->gamma8(value), p_strip->gamma8(value)));
-  }
-
+void Ledstrip::dimmenToValue(int value, int* pi_colorCode, int i_waitAfterEachLed) {
+  p_strip->fill(getColorFromColorCode(pi_colorCode, value));
   p_strip->show();
-
   delay(i_waitAfterEachLed);
 }
 

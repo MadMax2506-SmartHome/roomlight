@@ -54,6 +54,10 @@ void MqttCallbackHandler::handleDeviceConfigurations(Device* p_device, String s_
     int i_indexFirstDelimiter = s_value.indexOf(";");
     int i_indexSecondDelimiter = s_value.lastIndexOf(";");
 
+    p_mqtt->sendMSG(pc_topicToPublish, stringToChar(s_value.substring(0, i_indexFirstDelimiter)));
+    p_mqtt->sendMSG(pc_topicToPublish, stringToChar(s_value.substring(i_indexFirstDelimiter + 1, i_indexSecondDelimiter)));
+    p_mqtt->sendMSG(pc_topicToPublish, stringToChar(s_value.substring(i_indexSecondDelimiter + 1)));
+
     int* color = p_color->getMix(
       s_value.substring(0, i_indexFirstDelimiter).toInt(), // red
       s_value.substring(i_indexFirstDelimiter + 1, i_indexSecondDelimiter).toInt(), // green

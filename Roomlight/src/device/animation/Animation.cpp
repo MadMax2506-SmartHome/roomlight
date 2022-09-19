@@ -93,7 +93,6 @@ void Animation::setStatus(boolean b_status) {
 
 void Animation::setBrightness(int i_brightness) {
   Animation::i_brightness = i_brightness;
-  restart();
 }
 
 boolean Animation::getStatus() {
@@ -104,28 +103,28 @@ void Animation::animate() {
   //prüfen, ob Zustand Strip aktiv oder standby is
   if(getStatus()) {
     //Zustand ist aktiv
-
+    
+    if(i_brightness != p_strip->getBrightness()) {
+      p_strip->dimmen(i_brightness, pi_color, i_time);
+      p_strip->setBrightness(i_brightness);
+    }
     if(b_isChange) {
       idle();
       b_isChange = false;
 
-      if(i_brightness != p_strip->getBrightness()) {
-        p_strip->dimmen(i_brightness, i_time);
-      } else {
-        switch(c_type) {
-          case 'f':
-            p_strip->fade(pi_color, c_orientation, i_time);
-            break;
-          case 'r':
-            if(c_orientation != 'r' && c_orientation != 'l') {
-              c_orientation = 'l';
-            }
-            p_strip->rainbow(c_orientation, i_time);
-            break;
-          default:
-            p_strip->toColor(pi_color);
-            break;
-        }
+      switch(c_type) {
+        case 'f':
+          p_strip->fade(pi_color, c_orientation, i_time);
+          break;
+        case 'r':
+          if(c_orientation != 'r' && c_orientation != 'l') {
+            c_orientation = 'l';
+          }
+          p_strip->rainbow(c_orientation, i_time);
+          break;
+        default:
+          p_strip->toColor(pi_color);
+          break;
       }
     }
   } else {
