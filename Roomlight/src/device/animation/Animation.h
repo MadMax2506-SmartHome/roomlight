@@ -12,6 +12,7 @@ class Animation {
 private:
   int* pi_color;
   int i_time;
+  int i_brightness;
   char c_type;
   char c_orientation;
   boolean b_isChange;
@@ -22,6 +23,7 @@ private:
   StorageElement* p_animationTypeStorage;
   StorageElement* p_orientationStorage;
   StorageElement* p_statusStorage;
+  StorageElement* p_brightnessStorage;
 
   Storage* p_storage;
   Ledstrip* p_strip;
@@ -35,13 +37,16 @@ public:
 
     p_storage = new Storage(i_crcStorageIndex, i_startStorageIndex, i_endStorageIndex);
 
-    p_colorStorage          = new StorageElementMulti(i_startStorageIndex + 0, i_startStorageIndex + 2, new int[3]{255, 255, 255});
-    p_animationTimeStorage  = new StorageElement(i_startStorageIndex + 3, 0);
-    p_animationTypeStorage  = new StorageElement(i_startStorageIndex + 4, 'f');
-    p_orientationStorage    = new StorageElement(i_startStorageIndex + 5, 'r');
-    p_statusStorage         = new StorageElement(i_startStorageIndex + 6, true);
+    p_colorStorage = new StorageElementMulti(i_startStorageIndex + 0, i_startStorageIndex + 2, new int[3]{255, 255, 255});
+    p_animationTimeStorage = new StorageElement(i_startStorageIndex + 3, 0);
+    p_animationTypeStorage = new StorageElement(i_startStorageIndex + 4, 'f');
+    p_orientationStorage = new StorageElement(i_startStorageIndex + 5, 'r');
+    p_statusStorage = new StorageElement(i_startStorageIndex + 6, true);
+    p_brightnessStorage = new StorageElement(i_startStorageIndex + 7, 250);
 
     readConf();
+
+    p_strip->setBrightness(i_brightness);
   }
 
   void reloadConf();
@@ -54,6 +59,7 @@ public:
   void setType(char);
   void setColor(int*);
   void setStatus(boolean);
+  void setBrightness(int);
 
   boolean getStatus();
 

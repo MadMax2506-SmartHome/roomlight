@@ -72,9 +72,13 @@ void MqttCallbackHandler::handleDeviceConfigurations(Device* p_device, String s_
     else p_animation->setType('t');
 
     p_mqtt->sendMSG(pc_topicToPublish, p_device->getConfiguration());
-  } else if(s_value.equals("animation-time")) {
+  } else if(s_command.equals("animation-time")) {
     //Zeit der Animation von jeder LED
     p_animation->setTime(s_value.toInt());
+    p_mqtt->sendMSG(pc_topicToPublish, p_device->getConfiguration());
+  } else if(s_command.equals("brightness")) {
+    //Helligkeit der LEDs
+    p_animation->setBrightness(s_value.toInt());
     p_mqtt->sendMSG(pc_topicToPublish, p_device->getConfiguration());
   } else if(s_command.equals("restart-animation")) {
     //Animation neuladen

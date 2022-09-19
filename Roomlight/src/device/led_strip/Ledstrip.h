@@ -18,6 +18,7 @@ private:
   Adafruit_NeoPixel* p_strip;
 
   uint32_t getColorFromColorCode(int*);
+  void dimmenToValue(int, int);
 public:
   Ledstrip(int i_pin, int i_countLeds, int i_brightness, int i_colorModus=0):
    i_countLeds(i_countLeds),
@@ -48,14 +49,7 @@ public:
   void toColor(int*);
   void fade(int*, char, int);
   void multiFade(int**, int, char, int);
-  void dimmen(char, int);
+  void dimmen(int, int);
   void rainbow(char, int);
-
-  void toColor(int*, int, int);
-  void LEDtoColor(int*, int);
-  void fade(int*, char, int, int, int);
-  void multiFade(int**, int, char, int, int, int);
-  void dimmen(char, int, int, int);
-  void rainbow(char, int, int, int);
 };
 #endif //_LEDSTRIP_H_

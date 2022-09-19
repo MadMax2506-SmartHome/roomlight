@@ -21,9 +21,9 @@ void setup() {
   Serial.begin(9600);
 
   p_color = new Colors(MODUS_RGB);
-  p_keyboardDevice = new Device("deskLightingKeyboard", PIN_D4, 12, 0, 1, 7, p_color);
-  p_bedWallDevice = new Device("deskLightingBedWall", PIN_D3, 60, 8, 9, 15, p_color);
-  p_bedSideDevice = new Device("deskLightingBedSide", PIN_D2, 60, 16, 17, 23, p_color);
+  p_keyboardDevice = new Device("deskLightingKeyboard", PIN_D4, 12, 0, 1, 8, p_color);
+  p_bedWallDevice = new Device("deskLightingBedWall", PIN_D3, 60, 9, 10, 17, p_color);
+  p_bedSideDevice = new Device("deskLightingBedSide", PIN_D2, 60, 18, 19, 26, p_color);
 
   animate(); // show lights before connecting with network
 

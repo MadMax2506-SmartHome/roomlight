@@ -6,6 +6,7 @@ void Animation::reloadConf() {
   p_animationTypeStorage->reload();
   p_orientationStorage->reload();
   p_statusStorage->reload();
+  p_brightnessStorage->reload();
   p_storage->setCrc();
 }
 
@@ -17,6 +18,7 @@ void Animation::readConf() {
   c_type = p_storage->read(p_animationTypeStorage);
   c_orientation = p_storage->read(p_orientationStorage);
   b_status = p_storage->read(p_statusStorage);
+  i_brightness = p_storage->read(p_brightnessStorage);
 
   restart();
 }
@@ -27,6 +29,7 @@ void Animation::writeConf() {
   p_storage->write(p_animationTypeStorage, c_type);
   p_storage->write(p_orientationStorage, c_orientation);
   p_storage->write(p_statusStorage, b_status);
+  p_storage->write(p_brightnessStorage, i_brightness);
   p_storage->commit();
 }
 
@@ -42,6 +45,7 @@ char* Animation::getConfAsJSON() {
   str_msg+="\"blue\": " + String(pi_color[2]);
   str_msg+= "},";
   str_msg+= "\"orientation\": \"" + String(c_orientation) + "\",";
+  str_msg+= "\"brightness\": \"" + String(i_brightness) + "\",";
 
   switch(c_type) {
     case 'f':
@@ -87,6 +91,11 @@ void Animation::setStatus(boolean b_status) {
   restart();
 }
 
+void Animation::setBrightness(int i_brightness) {
+  Animation::i_brightness = i_brightness;
+  restart();
+}
+
 boolean Animation::getStatus() {
   return b_status;
 }
@@ -100,19 +109,23 @@ void Animation::animate() {
       idle();
       b_isChange = false;
 
-      switch(c_type) {
-        case 'f':
-          p_strip->fade(pi_color, c_orientation, i_time);
-          break;
-        case 'r':
-          if(c_orientation != 'r' && c_orientation != 'l') {
-            c_orientation = 'l';
-          }
-          p_strip->rainbow(c_orientation, i_time);
-          break;
-        default:
-          p_strip->toColor(pi_color);
-          break;
+      if(i_brightness != p_strip->getBrightness()) {
+        p_strip->dimmen(i_brightness, i_time);
+      } else {
+        switch(c_type) {
+          case 'f':
+            p_strip->fade(pi_color, c_orientation, i_time);
+            break;
+          case 'r':
+            if(c_orientation != 'r' && c_orientation != 'l') {
+              c_orientation = 'l';
+            }
+            p_strip->rainbow(c_orientation, i_time);
+            break;
+          default:
+            p_strip->toColor(pi_color);
+            break;
+        }
       }
     }
   } else {
