@@ -7,7 +7,7 @@ void Network::init(
   void callback(char*, u_int8_t*, unsigned int)
 ) {
   if(!p_wlan->connect()) return;
-  p_ota->init(p_wlan->getMac(), "madmax");
+  p_ota->init(p_wlan->getMac(), OTA_PASSWORD);
 
   initMQTT(p_keyboardDevice, p_bedWallDevice, p_bedSideDevice, callback);
 }
